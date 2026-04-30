@@ -99,5 +99,21 @@ function transition(input) {
                 message = 'Please enter your PIN'
             }
             break;
+        case STATES.S2:
+            if (input === INPUTS.ENTER_DIGIT) {
+                toState = STATES.S2;                                    //SELF-LOOP: Stay at S2 while collecting digits
+                this.pinBuffer += '0'                                   //Placeholder (actual digit comes from UI)
+                message = 'PIN: ' + '•'.repeat(this.pinBuffer.length)
+                
+                if (this.pinBuffer.length === 4) {
+                    action = 'auto_submit'
+                }
+            } else if (input === INPUTS.SUBMIT_PIN) {
+                //if correct PIN, move to S3
+                if (this.validatePin()) {
+
+                }
+
+            }
     }
 }
