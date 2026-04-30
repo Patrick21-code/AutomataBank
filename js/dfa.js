@@ -61,3 +61,15 @@ class ATM_DFA {
         this.transitionHistory = [];    //array of {from, input, to} objects
     }
 }
+
+//build the transition function (δ)
+//given a current state and an input, return the next state (δ: Q × Σ → Q)
+
+transition(input) {
+
+    const fromState = this.currentState     //save the starting state (for history)
+    let toState = fromState                 //will hold the next state
+    let message = ''                        //will hold the screen message
+    let action = null                       //will hold any side effects
+
+}
