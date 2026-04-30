@@ -111,9 +111,34 @@ function transition(input) {
             } else if (input === INPUTS.SUBMIT_PIN) {
                 //if correct PIN, move to S3
                 if (this.validatePin()) {
-
+                    toState = STATES.S3
+                    message = 'PIN correct. Select transaction: '
+                    action = 'show_transaction_menu'
+                    this.failedAttemps = 0;         //reset fail counter on success
+                } else {
+        
+                    toState = STATES.S5             //Wrong PIN - move to rejected state        
+                    this.failedAttempts++           
+                    
+                    if (this.failedAttemps >= this.maxAttempts) {
+                        message = 'Card blocked. Too many failed attempts.'
+                        action = 'block_card'
+                    } else {
+                        message =  `Wrong PIN. ${this.maxAttempts - this.failedAttemps} attempts remaining`;
+                        action = 'show_retry_options'
+                    }
                 }
 
+                this.pinBuffer = ''         //clear PIN buffer after submission
+            } else if (input === INPUTS.CANCEL) {
+                toState = STATES.S0
+                message = 'Transaction cancelled.'
+                this.pinBuffer = '';        //clear PIN buffer
+                action = 'eject_card'
+            } else {
+                message = 'PIN: ' + '•'.repeat(this.pinBuffer.length)
             }
+            break
+        
     }
 }
