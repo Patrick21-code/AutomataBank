@@ -139,6 +139,9 @@ function transition(input) {
                 message = 'PIN: ' + '•'.repeat(this.pinBuffer.length)
             }
             break
-        
+        case STATES.S3:
+            if (input === INPUTS.SELECT_WITHDRAW) {
+                
+            }
     }
 }
