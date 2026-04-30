@@ -31,7 +31,7 @@ const INPUTS = {
     SELECT_WITHDRAW: 'select_withdraw',
     SELECT_BALANCE: 'select_balance',
     CONFIRM: 'confirm',
-    CANCEL: 'cancel,',
+    CANCEL: 'cancel',
     EJECT_CARD: 'eject_card'
 }
 
@@ -83,6 +83,20 @@ function transition(input) {
             } else {
                 // invalid input for this state - stay at S0
                 message = 'Please insert your card to begin';
+            }
+            break;
+        case STATES.S1:
+            if (input === INPUTS.ENTER_DIGIT) {
+                toState = STATES.S2;
+                message = 'PIN: •'
+                this.pinBuffer = '' //start fresh PIN entry
+                action = 'start_pin_entry'
+            } else if (input === INPUTS.CANCEL) {
+                toState = STATES.S0
+                message = 'Transaction cancelled'
+                action = 'eject_card'
+            } else {
+                message = 'Please enter your PIN'
             }
             break;
     }
