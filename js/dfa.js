@@ -69,7 +69,21 @@ transition(input) {
 
     const fromState = this.currentState     //save the starting state (for history)
     let toState = fromState                 //will hold the next state
+                                            //default: stay in same state(no transition)
     let message = ''                        //will hold the screen message
     let action = null                       //will hold any side effects
 
+    //Define δ for every (state, input) pair
+    switch (this.currentState) {
+        case STATES.S0:
+            if (input === INPUTS.INSERT_CARD) {
+                toState = STATES.S1
+                message = 'Card accepted. Please enter your PIN.'
+                action = 'show_keypad';
+            } else {
+                // invalid input for this state - stay at S0
+                message = 'Please insert your card to begin';
+            }
+            break;
+    }
 }
