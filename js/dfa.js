@@ -10,12 +10,14 @@
 //define states (Q)
 const STATES = {
     S0: 'idle',             //q0 - start state
-    S1: 'card_inserted',
-    S2: 'pin_entry',
-    S3: 'authenticated',
-    S4: 'transaction',
-    S5: 'rejected',         //wrong PIN, can retry
-    S6: 'done'              //accepting state
+    S1: 'card_inserted',    //card detected, need account
+    S2: 'account_entry',   
+    S3: 'pin_entry',
+    S4: 'authenticated',
+    S5: 'amount_entry',
+    S6: 'balance_display',
+    S7: 'rejected',         //wrong PIN, can retry
+    S8: 'done'              //accepting state
 }
 
 //define alphabet (Σ)
