@@ -141,7 +141,13 @@ function transition(input) {
             break
         case STATES.S3:
             if (input === INPUTS.SELECT_WITHDRAW) {
-                
+                toState = STATES.S4
+                this.transactionType = 'withdraw'
+                message =  `Withdraw $${this.withdrawAmount}?`
+                action = 'show_confirm_button'
+            } else if (input === INPUTS.SELECT_BALANCE) {
+                toState = STATES.S4
+                this.transactionType = 'balance'
             }
     }
 }
