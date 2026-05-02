@@ -201,5 +201,34 @@ function transition(input) {
             }
             break
         
+        case STATES.S4:         //ammount entry (self-loop)
+            if (input === INPUTS.ENTER_AMOUNT) {
+                toState = STATES.S4     //self-loop: stay at S4 while collecting digits
+                this.amountBuffer += '0'    //placeholder
+                message = 'Amount: $' + this.amountBuffer
+            } else if (input === INPUTS.CONFIRM) {
+                const ammount = parseInt(this.ammountBuffer)
+                const result = this.processWithdrawal(amount)
+                
+                if (result.success) {
+                toState = STATES.S7
+                message = `Withdrawal successful! New balance: $${result.newBalance}`
+                action = 'dispense_cash'
+                } else {
+                    //stay at s4 if withdrawal fails
+                    message = `Error: ${result.error}. Try again.`
+                    this.amountBuffer = ''          //reset
+                }
+            } else if (input === INPUTS.CANCEL) {
+                toState = STATES.S3
+                message = 'Withdrawal cancelled. Select transaction.'
+                this.amountBuffer = ''
+                action = 'show_transaction_menu'
+            } else {
+                message = 'Amount: $' + this.amountBuffer
+            }
+            break
+        case STATES.S5:    //balance display
+            
     }
 }
