@@ -171,14 +171,35 @@ function transition(input) {
                     }
                 }
                 this.pinBuffer = ''     //clear pin buffer after submission
-             } else if (input === INPUTS.CANCEL) {
+            } else if (input === INPUTS.CANCEL) {
                 toState = STATES.S0
                 message = 'Transaction cancelled.'
                 this.pinBuffer = ''
                 action = 'reset_atm'
-             } else {
+            } else {
                 message = 'PIN: ' + '•'.repeat(this.pinBuffer.length);
-             }
-             break
+            }
+            break
+        case STATES.S3:     //authenticated - choose transaction
+            if (input === INPUTS.SELECT_WITHDRAW) {
+                toState = STATES.S4
+                this.transactionType = 'withdraw'
+                this.ammountBuffer = ''
+                message = 'Enter withdrawal ammount.'
+                action = 'show_amount_keypad'
+            } else if (input === INPUTS.SELECT_BALANCE) {
+                toState = STATES.S5
+                this.transactionType = 'balance'
+                message = `Your balance: $${this.getBalance()}`
+                action = 'show_balance'
+            } else if (input === INPUTS.CANCEL) {
+                toState = STATES.S0
+                message = 'Transaction cancelled'
+                action = 'reset_atm'
+            } else {
+                message = 'Select transaction: Withdraw or Balance'
+            }
+            break
+        
     }
 }
