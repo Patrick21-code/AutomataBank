@@ -90,3 +90,16 @@ function showKeypad(visible) {
     }
 }
 
+//show/hide transaction buttons
+//user can choose withdraw or balance
+function showTransactionMenu(visible) {
+    const menu = document.getElementById('transaction-menu')
+    if (!menu) return
+
+    menu.style.display = visible ? 'flex': 'none'
+
+    if (visible) {
+        menu.classList.add('fade-in')
+        setTimeout(() => menu.classList.remove('fade-in'), 300)
+    }
+}
