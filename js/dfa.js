@@ -78,8 +78,8 @@ class ATM_DFA {
         this.currentAccount = null      //reference to logged-in account
                                         //null since no one is logged in yet
         //security
-        this.failedAttempts = 0
-        this.maxAttempts = 3
+        this.pinFailedAttempts = 0
+        this.maxPinAttempts = 3
 
         //transaction data
         this.transactionType = null;    //'withdraw' or 'balance'
