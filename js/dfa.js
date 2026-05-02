@@ -275,4 +275,9 @@ function transition(input) {
             }
             break
     }
+
+    this.currentState = toState
+    this.transitionHistory.push({from: fromState, input, to: toState})
+
+    return {fromState, toState, message, action, currentBalance: this.getBalance()}
 }
