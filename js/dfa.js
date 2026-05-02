@@ -102,27 +102,13 @@ transition(input) {
     //Define δ for every (state, input) pair
     switch (this.currentState) {
         case STATES.S0:
-            if (input === INPUTS.INSERT_CARD) {
+            if (input === INPUTS.START) {
                 toState = STATES.S1
-                message = 'Card accepted. Enter account number.'
-                action = 'show_keypad';
+                message = 'Enter your 5-digit account number.'
+                this.accountBuffer = ''         //start fresh
+                action = 'show_keypad'
             } else {
-                // invalid input for this state - stay at S0
-                message = 'Please insert your card to begin';
-            }
-            break;
-        case STATES.S1:                         //card inserted need account number
-            if (input === INPUTS.ENTER_DIGIT) {
-                toState = STATES.S2;
-                this.accountBuffer = ''         //start fresh account entry
-                message = 'Account: ';
-                action = 'start_account_entry'
-            } else if (input === INPUTS.CANCEL) {
-                toState = STATES.S0
-                message = 'Transaction cancelled'
-                action = 'eject_card'
-            } else {
-                message = 'Please enter your account number.'
+                message = 'Press START to begin transaction';
             }
             break;
         case STATES.S2:         //account entry(self-loop!)
