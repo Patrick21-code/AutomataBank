@@ -77,7 +77,7 @@ class ATM_DFA {
 
         //account management
         this.currentAccount = null      //reference to logged-in account
-        
+                                        //null since no one is logged in yet
         //security
         this.failedAttempts = 0
         this.maxAttempts = 3
@@ -92,8 +92,7 @@ class ATM_DFA {
 
 //build the transition function (δ)
 //given a current state and an input, return the next state (δ: Q × Σ → Q)
-
-function transition(input) {
+transition(input) {
 
     const fromState = this.currentState     //save the starting state (for history)
     let toState = fromState                 //will hold the next state
@@ -106,7 +105,7 @@ function transition(input) {
         case STATES.S0:
             if (input === INPUTS.INSERT_CARD) {
                 toState = STATES.S1
-                message = 'Card accepted. Please enter your PIN.'
+                message = 'Card accepted. Enter account number.'
                 action = 'show_keypad';
             } else {
                 // invalid input for this state - stay at S0
@@ -116,9 +115,7 @@ function transition(input) {
         case STATES.S1:
             if (input === INPUTS.ENTER_DIGIT) {
                 toState = STATES.S2;
-                message = 'PIN: •'
-                this.pinBuffer = '' //start fresh PIN entry
-                action = 'start_pin_entry'
+                
             } else if (input === INPUTS.CANCEL) {
                 toState = STATES.S0
                 message = 'Transaction cancelled'
