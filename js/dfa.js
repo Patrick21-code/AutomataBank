@@ -22,7 +22,7 @@ const STATES = {
 //define alphabet (Σ)
 //all possible inputs that my DFA can receive
 const INPUTS = {
-    INSERT_CARD: 'insert_card',
+    START: 'start',
     ENTER_DIGIT: 'enter_digit',
     SUBMIT_ACCOUNT: 'submit_account',
     CORRECT_ACCOUNT: 'correct_account', //internal input
@@ -40,7 +40,7 @@ const INPUTS = {
     CONFIRM: 'confirm',
     BACK: 'back',                       //go back to transaction menu
     CANCEL: 'cancel',
-    EJECT_CARD: 'eject_card'
+    RESET: 'reset'
 }
 
 //define account database
