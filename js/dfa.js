@@ -114,7 +114,7 @@ transition(input) {
             if (input === INPUTS.ENTER_DIGIT) {
                 toState = STATES.S1;   //stay at s1 while collecting digits
                 this.accountBuffer += '0'    //Placeholder (actual digit comes from UI)
-                message = 'Account: ' + this.accountBuffer;
+                message = `Account: ${this.accountBuffer}`; //show in plain text
                 
                 if (this.accountBuffer.length === 5) {
                     action = 'auto_submit_account'
