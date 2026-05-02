@@ -70,18 +70,22 @@ class ATM_DFA {
         //current state - starts at q0
         this.currentState = STATES.S0
 
-        //PIN handling
-        this.pinBuffer = ''             //stores digits as user types
-        this.correctPin = '1234'        //the PIN (hardcoded)
-        this.failedAttempts = 0         //Security counter
-        this.maxAttempts = 3            //lock card after 3 wrong tries
+        //input buffers
+        this.accountBuffer = ''         //stores account digits as user types
+        this.pinBuffer = ''             //stores PIN digits as user types
+        this.amountBuffer = ''          //stores amount digits as user types
+
+        //account management
+        this.currentAccount = null      //reference to logged-in account
+        
+        //security
+        this.failedAttempts = 0
+        this.maxAttempts = 3
 
         //transaction data
         this.transactionType = null;    //'withdraw' or 'balance'
-        this.balance  = 5000;           // mock account balance
-        this.withdrawAmount = 100       //fixed withdrawal for simplicity
-        
-        //history tracking
+
+        //history tracking (for UI display)
         this.transitionHistory = [];    //array of {from, input, to} objects
     }
 }
