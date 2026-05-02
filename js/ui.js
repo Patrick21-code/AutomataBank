@@ -62,3 +62,15 @@ function displayAmountMask(amount) {
     return `Enter amount: $${amount}`
 }
 
+//updateAmountDisplay - update screen with amount
+function updateAmountDisplay(amount) {
+    const screen = document.getElementById('atm-screen')
+    if (!screen) return
+
+    const formattedAmount = displayAmountMask(amount)
+    screen.textContent = formattedAmount
+
+    screen.classList.add('typing')
+    setTimeout(() => screen.classList.remove('typing'), 100)
+}
+
