@@ -103,3 +103,11 @@ function showTransactionMenu(visible) {
         setTimeout(() => menu.classList.remove('fade-in'), 300)
     }
 }
+
+function showConfirmButtons(visible) {
+    const confirmBtn = document.getElementById()
+    const cancelBtn = document.getElementById()
+
+    if (confirmBtn) confirmBtn.style.display = visible ? 'block' : 'none'
+    if (cancelBtn) cancelBtn.style.display = visible ? 'block' : 'none'
+}
