@@ -349,3 +349,11 @@ function getStateDescription () {
 function getTransitionHistory () {
     return this.transitionHistory
 }
+
+//check if we're at an accept state
+function isInAcceptState() {
+    return this.currentState === STATES.S7
+}
+
+//export everything
+export {ATM_DFA, STATES, INPUTS}
