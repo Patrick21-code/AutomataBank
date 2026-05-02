@@ -104,6 +104,7 @@ function showTransactionMenu(visible) {
     }
 }
 
+//show/hide confirm/cancel buttons
 function showConfirmButtons(visible) {
     const confirmBtn = document.getElementById()
     const cancelBtn = document.getElementById()
@@ -111,3 +112,18 @@ function showConfirmButtons(visible) {
     if (confirmBtn) confirmBtn.style.display = visible ? 'block' : 'none'
     if (cancelBtn) cancelBtn.style.display = visible ? 'block' : 'none'
 }
+
+function showStartButton(visible) {
+    const btn = document.getElementById('btn-start')
+    if (!btn) return
+
+    btn.style.display = visible ? 'block' : 'none'
+
+    if (visible) {
+        btn.classList.add('pulse')
+    } else {
+        btn.classList.remove('pulse')
+    }
+
+}
+
