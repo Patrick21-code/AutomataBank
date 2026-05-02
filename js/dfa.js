@@ -330,3 +330,17 @@ function reset() {
     this.pinFailedAttempts = 0
     this.transitionHistory = []
 }
+
+function getStateDescription () { 
+    const descriptions = {
+        [STATES.S0]: 'Idle - Waiting to start',
+        [STATES.S1]: 'Account Entry - Collecting digits',
+        [STATES.S2]: 'PIN Entry - Collecting digits',
+        [STATES.S3]: 'Authenticated = Choose transaction',
+        [STATES.S4]: 'Amount Entry - Enter withdrawal amount',
+        [STATES.S5]: 'Balance Display - Showing balance',
+        [STATES.S6]: 'Rejected - Wrong credentials',
+        [STATES.S7]: 'Done - Transaction complete'
+    }
+    return descriptions[this.currentState] || 'Unknown state';
+}
