@@ -91,7 +91,7 @@ class ATM_DFA {
 
 //build the transition function (δ)
 //given a current state and an input, return the next state (δ: Q × Σ → Q)
-transition(input) {
+function transition(input) {
 
     const fromState = this.currentState     //save the starting state (for history)
     let toState = fromState                 //will hold the next state
@@ -111,9 +111,9 @@ transition(input) {
                 message = 'Press START to begin transaction';
             }
             break;
-        case STATES.S2:         //account entry(self-loop!)
+        case STATES.S1:         //account entry(self-loop!)
             if (input === INPUTS.ENTER_DIGIT) {
-                toState = STATES.S2;   //stay at s2 while collecting digits
+                toState = STATES.S1;   //stay at s1 while collecting digits
                 this.accountBuffer += '0'    //Placeholder (actual digit comes from UI)
                 message = 'Account: ' + this.accountBuffer;
                 
@@ -121,34 +121,26 @@ transition(input) {
                     action = 'auto_submit_account'
                 }
             } else if (input === INPUTS.SUBMIT_ACCOUNT) {
-                //if account detected, move to S3
+                //validate account
                 if (this.validateAccount()) {       //validateAccount function
-                    toState = STATES.S3
+                    toState = STATES.S2
                     this.currentAccount = ACCOUNTS[this.accountBuffer]
                     message = 'Account valid. Enter PIN.'
                     this.pinBuffer = ''     //prepare for PIN entry
                     action = 'start_pin_entry'
                 } else {
-                    toState = STATES.S7         //wrong account = move to rejected state
-                    this.failedAttempts++           
-                    
-                    if (this.failedAttemps >= this.maxAttempts) {
-                        message = 'Card blocked. Too many failed attempts.'
-                        action = 'block_card'
-                    } else {
-                        message =  `Wrong PIN. ${this.maxAttempts - this.failedAttemps} attempts remaining`;
-                        action = 'show_retry_options'
-                    }
+                    //wrong account - just show error
+                    //stay at S1 to allow entry
+                    message = 'Invalid account number. Please try again.'
+                    this.accountBuffer = ''         //clear for retry
                 }
-
-                this.pinBuffer = ''         //clear PIN buffer after submission
             } else if (input === INPUTS.CANCEL) {
                 toState = STATES.S0
                 message = 'Transaction cancelled.'
-                this.pinBuffer = '';        //clear PIN buffer
-                action = 'eject_card'
+                this.accountBuffer = '';        //clear PIN buffer
+                action = 'reset_atm'
             } else {
-                message = 'PIN: ' + '•'.repeat(this.pinBuffer.length)
+                message = 'Account: ' + this.accountBuffer
             }
             break
         case STATES.S3:
