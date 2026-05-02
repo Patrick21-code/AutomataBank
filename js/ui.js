@@ -54,3 +54,11 @@ function updatePinDisplay(length) {
     setTimeout(() => screen.classList.remove('typing'), 100)
 }
 
+//displayAmountMask - for better UX
+function displayAmountMask(amount) {
+    if (!amount || amount === '') {
+        return '$Enter amount: $ ___'
+    }
+    return `Enter amount: $${amount}`
+}
+
