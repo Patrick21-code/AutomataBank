@@ -354,10 +354,9 @@ transition(input) {
     }
 }
 //export everything
-export {ATM_DFA, STATES, INPUTS}
+//export {ATM_DFA, STATES, INPUTS}
 
-/*
+
 window.ATM_DFA = ATM_DFA;
 window.STATES = STATES;
 window.INPUTS = INPUTS;
-*/
