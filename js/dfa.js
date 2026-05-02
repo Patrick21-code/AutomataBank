@@ -344,3 +344,8 @@ function getStateDescription () {
     }
     return descriptions[this.currentState] || 'Unknown state';
 }
+
+//get all transitions so far
+function getTransitionHistory () {
+    return this.transitionHistory
+}
