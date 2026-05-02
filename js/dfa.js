@@ -116,7 +116,7 @@ transition(input) {
                 this.accountBuffer += '0'    //Placeholder (actual digit comes from UI)
                 message = 'Account: ' + this.accountBuffer;
                 
-                if (this.pinBuffer.length === 5) {
+                if (this.accountBuffer.length === 5) {
                     action = 'auto_submit_account'
                 }
             } else if (input === INPUTS.SUBMIT_ACCOUNT) {
