@@ -263,5 +263,16 @@ function transition(input) {
                 action = 'reset_atm'
             }
             break
+        case STATES.S7: //done (accepting state) - transaction complete
+            if (input === INPUTS.RESET) {
+                toState = STATES.S0
+                message = 'Thank you for using our ATM.'
+                this.currentAccount = null
+                this.pinFailedAttempts = 0
+                action = 'reset_atm'
+            } else {
+                message = 'Transaction complete. Press RESET to finish.'
+            }
+            break
     }
 }
