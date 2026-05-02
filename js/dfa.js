@@ -318,3 +318,15 @@ function getBalance() {
     return this.currentAccount ? this.currentAccount.balance : 0
     //the certain account has to much the current account balance
 }
+
+//return DFA to initial state
+function reset() {
+    this.currentState = STATES.S0;
+    this.accountBuffer = ''
+    this.pinBuffer = ''
+    this.amountBuffer = ''
+    this.currentAccount = ''
+    this.currentAccount = null
+    this.pinFailedAttempts = 0
+    this.transitionHistory = []
+}
