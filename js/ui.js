@@ -74,3 +74,19 @@ function updateAmountDisplay(amount) {
     setTimeout(() => screen.classList.remove('typing'), 100)
 }
 
+//control button visibility
+//other states doesn't need the button
+function showKeypad(visible) {
+    const keypad = document.getElementById('keypad')
+    if (!keypad) return
+
+    //none removes it from the layout
+    keypad.style.display = visible ? 'grid' : 'none'
+
+    //add fade-in animation when showing
+    if (visible) {
+        keypad.classList.add('fade-in')
+        setTimeout(() => keypad.classList.remove('fade-in'), 300)
+    }
+}
+
