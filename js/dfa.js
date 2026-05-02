@@ -10,14 +10,13 @@
 //define states (Q)
 const STATES = {
     S0: 'idle',             //q0 - start state
-    S1: 'card_inserted',    //card detected, need account
-    S2: 'account_entry',   
-    S3: 'pin_entry',
-    S4: 'authenticated',
-    S5: 'amount_entry',
-    S6: 'balance_display',
-    S7: 'rejected',         //wrong PIN, can retry
-    S8: 'done'              //accepting state
+    S1: 'account_entry',   
+    S2: 'pin_entry',
+    S3: 'authenticated',
+    S4: 'amount_entry',
+    S5: 'balance_display',
+    S6: 'rejected',         //wrong credentials, can retry
+    S7: 'done'              //accepting state
 }
 
 //define alphabet (Σ)
@@ -112,7 +111,7 @@ transition(input) {
                 message = 'Please insert your card to begin';
             }
             break;
-        case STATES.S1:
+        case STATES.S1:                         //card inserted need account number
             if (input === INPUTS.ENTER_DIGIT) {
                 toState = STATES.S2;
                 this.accountBuffer = ''         //start fresh account entry
@@ -126,25 +125,25 @@ transition(input) {
                 message = 'Please enter your account number.'
             }
             break;
-        case STATES.S2:
+        case STATES.S2:         //account entry(self-loop!)
             if (input === INPUTS.ENTER_DIGIT) {
-                toState = STATES.S2;                                    //SELF-LOOP: Stay at S2 while collecting digits
-                this.pinBuffer += '0'                                   //Placeholder (actual digit comes from UI)
-                message = 'PIN: ' + '•'.repeat(this.pinBuffer.length)
+                toState = STATES.S2;   //stay at s2 while collecting digits
+                this.accountBuffer += '0'    //Placeholder (actual digit comes from UI)
+                message = 'Account: ' + this.accountBuffer;
                 
-                if (this.pinBuffer.length === 4) {
-                    action = 'auto_submit'
+                if (this.pinBuffer.length === 5) {
+                    action = 'auto_submit_account'
                 }
-            } else if (input === INPUTS.SUBMIT_PIN) {
-                //if correct PIN, move to S3
-                if (this.validatePin()) {
+            } else if (input === INPUTS.SUBMIT_ACCOUNT) {
+                //if account detected, move to S3
+                if (this.validateAccount()) {       //validateAccount function
                     toState = STATES.S3
-                    message = 'PIN correct. Select transaction: '
-                    action = 'show_transaction_menu'
-                    this.failedAttemps = 0;         //reset fail counter on success
+                    this.currentAccount = ACCOUNTS[this.accountBuffer]
+                    message = 'Account valid. Enter PIN.'
+                    this.pinBuffer = ''     //prepare for PIN entry
+                    action = 'start_pin_entry'
                 } else {
-        
-                    toState = STATES.S5             //Wrong PIN - move to rejected state        
+                    toState = STATES.S7         //wrong account = move to rejected state
                     this.failedAttempts++           
                     
                     if (this.failedAttemps >= this.maxAttempts) {
