@@ -324,7 +324,6 @@ transition(input) {
         this.accountBuffer = ''
         this.pinBuffer = ''
         this.amountBuffer = ''
-        this.currentAccount = ''
         this.currentAccount = null
         this.pinFailedAttempts = 0
         this.transitionHistory = []
