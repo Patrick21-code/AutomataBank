@@ -115,13 +115,15 @@ transition(input) {
         case STATES.S1:
             if (input === INPUTS.ENTER_DIGIT) {
                 toState = STATES.S2;
-                
+                this.accountBuffer = ''         //start fresh account entry
+                message = 'Account: ';
+                action = 'start_account_entry'
             } else if (input === INPUTS.CANCEL) {
                 toState = STATES.S0
                 message = 'Transaction cancelled'
                 action = 'eject_card'
             } else {
-                message = 'Please enter your PIN'
+                message = 'Please enter your account number.'
             }
             break;
         case STATES.S2:
