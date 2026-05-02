@@ -38,3 +38,19 @@ function displayPinMask(length) {
 
     return `PIN: ${mask}`
 }
+
+//updatePinDisplay - update screen with masked PIN
+//modifies the DOM unlike displayPinMask which just returns a string
+function updatePinDisplay(length) {
+    const screen = document.getElementById('atm-screen')
+    if (!screen) return
+
+    const maskedPin = displayPinMask(length)
+
+    screen.textContent = maskedPin
+
+    //add typing animation
+    screen.classList.add('typing')
+    setTimeout(() => screen.classList.remove('typing'), 100)
+}
+
