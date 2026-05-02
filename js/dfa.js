@@ -44,6 +44,21 @@ const INPUTS = {
     EJECT_CARD: 'eject_card'
 }
 
+//define account database
+//simple object, not integrating a real backend
+const ACCOUNTS = {
+    '12345': {
+        pin: '1234',
+        balance: 5000,
+        name: 'Account 1'
+    },
+    '67890': {
+        pin: '5678',
+        balance: 5000,
+        name: 'Account 2'
+    },
+}
+
 //create the dfa class structure
 //maintains:
     //the current state
