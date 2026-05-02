@@ -143,15 +143,42 @@ function transition(input) {
                 message = 'Account: ' + this.accountBuffer
             }
             break
-        case STATES.S3:
-            if (input === INPUTS.SELECT_WITHDRAW) {
-                toState = STATES.S4
-                this.transactionType = 'withdraw'
-                message =  `Withdraw $${this.withdrawAmount}?`
-                action = 'show_confirm_button'
-            } else if (input === INPUTS.SELECT_BALANCE) {
-                toState = STATES.S4
-                this.transactionType = 'balance'
-            }
+        case STATES.S2:     //pin entry (self-loop)
+            if (input === INPUTS.ENTER_DIGIT) {
+                toState = STATES.S2     //stay at S2 while collecting digits
+                this.pinBuffer += '0'   //placeholder (actual digit comes from UI)
+                message = 'PIN: ' + '•'.repeat(this.pinBuffer.length)
+
+                if (this.pinBuffer.length === 4)
+                    action = 'auto_submit_pin';
+
+            } else if (input === INPUTS.SUBMIT_PIN) {
+                if (this.validatePin()) {
+                    toState = STATES.S3
+                    message = 'PIN correct. Select transaction.'
+                    action = 'show_transaction_menu'
+                    this.pinFailedAttempts = 0;     //reset fail counter on success
+                } else {
+                    toState = STATES.S6;
+                    this.pinFailedAttempts++
+        
+                    if (this.pinFailedAttempts >= this.maxPinAttempts) {
+                        message = 'Card blocked. Too many wrong PIN attempts'
+                        action = 'block_card'
+                    } else {
+                        message = `WRONG PIN. ${this.maxPinAttempts - this.pinFailedAttempts} attempts remaining`
+                        action = 'show_retry_options'
+                    }
+                }
+                this.pinBuffer = ''     //clear pin buffer after submission
+             } else if (input === INPUTS.CANCEL) {
+                toState = STATES.S0
+                message = 'Transaction cancelled.'
+                this.pinBuffer = ''
+                action = 'reset_atm'
+             } else {
+                message = 'PIN: ' + '•'.repeat(this.pinBuffer.length);
+             }
+             break
     }
 }
