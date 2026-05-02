@@ -313,3 +313,8 @@ function processWithdrawal(amount) {
         newBalance: this.currentAccount.balance
     }
 }
+
+function getBalance() {
+    return this.currentAccount ? this.currentAccount.balance : 0
+    //the certain account has to much the current account balance
+}
