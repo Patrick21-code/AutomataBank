@@ -241,5 +241,27 @@ function transition(input) {
                 messaget = `Your balance: $${this.getBalance()}`
             }
             break
+        case STATES.S6:             //rejected - wrong PIN
+            if (input === INPUTS.ENTER_DIGIT) {
+                //retry - go back to account entry
+                toState = STATES.S2
+                message = 'Try your PIN again.'
+                this.pinBuffer = ''
+                action = 'show_keypad' 
+            } else if (input === INPUTS.CANCEL) {
+                //start over with difference account
+                toState = STATES.S1
+                message = 'Enter account number.'
+                this.accountBuffer = ''
+                this.pinBuffer = ''
+                this.currentAccount = null
+                action = 'show_keypad'
+            } else if (input === INPUTS.RESET) {
+                toState = STATES.S0
+                message = 'Session ended'
+                this.pinFailedAttempts = 0
+                action = 'reset_atm'
+            }
+            break
     }
 }
