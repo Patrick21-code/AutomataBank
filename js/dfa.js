@@ -229,6 +229,17 @@ function transition(input) {
             }
             break
         case STATES.S5:    //balance display
-            
+            if (input === INPUTS.BACK) {
+                toState = STATES.S3     // back to transaction menu
+                message = 'Select transaction: Withdraw or Balance.'
+                action = 'show_transaction_menu'
+            } else if (input === INPUTS.CANCEL) {
+                toState = STATES.S0
+                message = 'Thank you for using our ATM'
+                action = 'reset_atm'
+            } else {
+                messaget = `Your balance: $${this.getBalance()}`
+            }
+            break
     }
 }
