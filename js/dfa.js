@@ -237,7 +237,7 @@ transition(input) {
                 message = 'Thank you for using our ATM'
                 action = 'reset_atm'
             } else {
-                messaget = `Your balance: $${this.getBalance()}`
+                message = `Your balance: $${this.getBalance()}`
             }
             break
         case STATES.S6:             //rejected - wrong PIN
