@@ -283,16 +283,16 @@ transition(input) {
 
     //helper methods for the transition function
 
-    function validateAccount () {
+    validateAccount () {
         return ACCOUNTS.hasOwnProperty(this.accountBuffer)
     }
 
-    function validatePin () {
+    validatePin () {
         if (!this.currentAccount) return false      //if not the account, return false
         return this.pinBuffer === this.currentAccount.pin
     }
 
-    function processWithdrawal(amount) {
+    processWithdrawal(amount) {
         if (!this.currentAccount) {
             return {success: false, error: 'No account logged in'}
         }
@@ -313,13 +313,13 @@ transition(input) {
         }
     }
 
-    function getBalance() {
+    getBalance() {
         return this.currentAccount ? this.currentAccount.balance : 0
         //the certain account has to much the current account balance
     }
 
     //return DFA to initial state
-    function reset() {
+    reset() {
         this.currentState = STATES.S0;
         this.accountBuffer = ''
         this.pinBuffer = ''
@@ -330,7 +330,7 @@ transition(input) {
         this.transitionHistory = []
     }
 
-    function getStateDescription () { 
+    getStateDescription () { 
         const descriptions = {
             [STATES.S0]: 'Idle - Waiting to start',
             [STATES.S1]: 'Account Entry - Collecting digits',
@@ -345,12 +345,12 @@ transition(input) {
     }
 
     //get all transitions so far
-    function getTransitionHistory () {
+    getTransitionHistory () {
         return this.transitionHistory
     }
 
     //check if we're at an accept state
-    function isInAcceptState() {
+    isInAcceptState() {
         return this.currentState === STATES.S7
     }
 }
