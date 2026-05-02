@@ -183,8 +183,8 @@ transition(input) {
             if (input === INPUTS.SELECT_WITHDRAW) {
                 toState = STATES.S4
                 this.transactionType = 'withdraw'
-                this.ammountBuffer = ''
-                message = 'Enter withdrawal ammount.'
+                this.amountBuffer = ''
+                message = 'Enter withdrawal amount.'
                 action = 'show_amount_keypad'
             } else if (input === INPUTS.SELECT_BALANCE) {
                 toState = STATES.S5
@@ -200,13 +200,13 @@ transition(input) {
             }
             break
         
-        case STATES.S4:         //ammount entry (self-loop)
+        case STATES.S4:         //amount entry (self-loop)
             if (input === INPUTS.ENTER_AMOUNT) {
                 toState = STATES.S4     //self-loop: stay at S4 while collecting digits
                 this.amountBuffer += '0'    //placeholder
                 message = 'Amount: $' + this.amountBuffer
             } else if (input === INPUTS.CONFIRM) {
-                const ammount = parseInt(this.ammountBuffer)
+                const amount = parseInt(this.amountBuffer)
                 const result = this.processWithdrawal(amount)
                 
                 if (result.success) {
