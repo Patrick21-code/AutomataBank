@@ -281,3 +281,35 @@ function transition(input) {
 
     return {fromState, toState, message, action, currentBalance: this.getBalance()}
 }
+
+//helper methods for the transition function
+
+function validateAccount () {
+    return ACCOUNTS.hasOwnProperty(this.accountBuffer)
+}
+
+function validatePin () {
+    if (!this.currentAccount) return false      //if not the account, return false
+    return this.pinBuffer === this.currentAccount.pin
+}
+
+function processWithdrawal(amount) {
+    if (!this.currentAccount) {
+        return {success: false, error: 'No account logged in'}
+    }
+
+    if (amount <= 0) {
+        return {success: false, error: 'Invalid amount'}
+    }
+
+    if (this.currentAccount.balance < amount) {
+        return {success: false, error: 'Insufficient funds'}
+    }
+
+    this.currentAccount.balance -= amount
+
+    return {
+        success: true,
+        newBalance: this.currentAccount.balance
+    }
+}
