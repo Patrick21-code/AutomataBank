@@ -87,11 +87,10 @@ class ATM_DFA {
         //history tracking (for UI display)
         this.transitionHistory = [];    //array of {from, input, to} objects
     }
-}
 
 //build the transition function (δ)
 //given a current state and an input, return the next state (δ: Q × Σ → Q)
-function transition(input) {
+transition(input) {
 
     const fromState = this.currentState     //save the starting state (for history)
     let toState = fromState                 //will hold the next state
@@ -282,78 +281,82 @@ function transition(input) {
     return {fromState, toState, message, action, currentBalance: this.getBalance()}
 }
 
-//helper methods for the transition function
+    //helper methods for the transition function
 
-function validateAccount () {
-    return ACCOUNTS.hasOwnProperty(this.accountBuffer)
-}
-
-function validatePin () {
-    if (!this.currentAccount) return false      //if not the account, return false
-    return this.pinBuffer === this.currentAccount.pin
-}
-
-function processWithdrawal(amount) {
-    if (!this.currentAccount) {
-        return {success: false, error: 'No account logged in'}
+    function validateAccount () {
+        return ACCOUNTS.hasOwnProperty(this.accountBuffer)
     }
 
-    if (amount <= 0) {
-        return {success: false, error: 'Invalid amount'}
+    function validatePin () {
+        if (!this.currentAccount) return false      //if not the account, return false
+        return this.pinBuffer === this.currentAccount.pin
     }
 
-    if (this.currentAccount.balance < amount) {
-        return {success: false, error: 'Insufficient funds'}
+    function processWithdrawal(amount) {
+        if (!this.currentAccount) {
+            return {success: false, error: 'No account logged in'}
+        }
+
+        if (amount <= 0) {
+            return {success: false, error: 'Invalid amount'}
+        }
+
+        if (this.currentAccount.balance < amount) {
+            return {success: false, error: 'Insufficient funds'}
+        }
+
+        this.currentAccount.balance -= amount
+
+        return {
+            success: true,
+            newBalance: this.currentAccount.balance
+        }
     }
 
-    this.currentAccount.balance -= amount
+    function getBalance() {
+        return this.currentAccount ? this.currentAccount.balance : 0
+        //the certain account has to much the current account balance
+    }
 
-    return {
-        success: true,
-        newBalance: this.currentAccount.balance
+    //return DFA to initial state
+    function reset() {
+        this.currentState = STATES.S0;
+        this.accountBuffer = ''
+        this.pinBuffer = ''
+        this.amountBuffer = ''
+        this.currentAccount = ''
+        this.currentAccount = null
+        this.pinFailedAttempts = 0
+        this.transitionHistory = []
+    }
+
+    function getStateDescription () { 
+        const descriptions = {
+            [STATES.S0]: 'Idle - Waiting to start',
+            [STATES.S1]: 'Account Entry - Collecting digits',
+            [STATES.S2]: 'PIN Entry - Collecting digits',
+            [STATES.S3]: 'Authenticated = Choose transaction',
+            [STATES.S4]: 'Amount Entry - Enter withdrawal amount',
+            [STATES.S5]: 'Balance Display - Showing balance',
+            [STATES.S6]: 'Rejected - Wrong credentials',
+            [STATES.S7]: 'Done - Transaction complete'
+        }
+        return descriptions[this.currentState] || 'Unknown state';
+    }
+
+    //get all transitions so far
+    function getTransitionHistory () {
+        return this.transitionHistory
+    }
+
+    //check if we're at an accept state
+    function isInAcceptState() {
+        return this.currentState === STATES.S7
     }
 }
-
-function getBalance() {
-    return this.currentAccount ? this.currentAccount.balance : 0
-    //the certain account has to much the current account balance
-}
-
-//return DFA to initial state
-function reset() {
-    this.currentState = STATES.S0;
-    this.accountBuffer = ''
-    this.pinBuffer = ''
-    this.amountBuffer = ''
-    this.currentAccount = ''
-    this.currentAccount = null
-    this.pinFailedAttempts = 0
-    this.transitionHistory = []
-}
-
-function getStateDescription () { 
-    const descriptions = {
-        [STATES.S0]: 'Idle - Waiting to start',
-        [STATES.S1]: 'Account Entry - Collecting digits',
-        [STATES.S2]: 'PIN Entry - Collecting digits',
-        [STATES.S3]: 'Authenticated = Choose transaction',
-        [STATES.S4]: 'Amount Entry - Enter withdrawal amount',
-        [STATES.S5]: 'Balance Display - Showing balance',
-        [STATES.S6]: 'Rejected - Wrong credentials',
-        [STATES.S7]: 'Done - Transaction complete'
-    }
-    return descriptions[this.currentState] || 'Unknown state';
-}
-
-//get all transitions so far
-function getTransitionHistory () {
-    return this.transitionHistory
-}
-
-//check if we're at an accept state
-function isInAcceptState() {
-    return this.currentState === STATES.S7
-}
-
 //export everything
-export {ATM_DFA, STATES, INPUTS}
+//export {ATM_DFA, STATES, INPUTS}
+
+window.ATM_DFA = ATM_DFA;
+window.STATES = STATES;
+window.INPUTS = INPUTS;
