@@ -31,3 +31,10 @@ function updateScreen(state, message) {
         screen.classList.remove('screen-update')
     }, 300)
 }
+
+//displayPinMask - show pin as dots for security
+function displayPinMask(length) {
+    const mask = '•'.repeat(length)
+
+    return `PIN: ${mask}`
+}
