@@ -1,0 +1,1037 @@
+/* ============================================================
+   AutomataBank — ATM DFA Simulator
+   style.css
+   Design: Industrial-terminal aesthetic. Dark steel chassis,
+   phosphor-green screen glow, tactile keypad buttons.
+   ============================================================ */
+
+/* ── Google Font Import ─────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Oxanium:wght@400;600;700;800&display=swap');
+
+/* ── Design Tokens ──────────────────────────────────────── */
+:root {
+  /* Brand palette */
+  --atm-primary:      #2563eb;
+  --atm-success:      #16a34a;
+  --atm-danger:       #dc2626;
+  --atm-warning:      #f59e0b;
+  --atm-neutral:      #64748b;
+
+  /* State diagram */
+  --state-active:     #22c55e;
+  --state-inactive:   #e2e8f0;
+  --transition-color: #3b82f6;
+
+  /* Surface */
+  --surface-bg:       #0f1117;
+  --surface-card:     #1a1e2e;
+  --surface-raised:   #232843;
+  --surface-border:   #2e3554;
+
+  /* Chassis / ATM body */
+  --chassis-bg:       #1c2030;
+  --chassis-border:   #374163;
+  --chassis-shadow:   0 24px 64px rgba(0,0,0,0.7);
+
+  /* Screen phosphor */
+  --screen-bg-from:   #0a1628;
+  --screen-bg-to:     #0d1f45;
+  --screen-text:      #60a5fa;
+  --screen-glow:      rgba(96, 165, 250, 0.25);
+
+  /* Text */
+  --text-primary:     #e2e8f0;
+  --text-secondary:   #94a3b8;
+  --text-muted:       #475569;
+
+  /* Spacing */
+  --radius-sm:  0.375rem;
+  --radius-md:  0.75rem;
+  --radius-lg:  1.25rem;
+  --radius-xl:  1.75rem;
+
+  /* Fonts */
+  --font-display: 'Oxanium', 'Courier New', monospace;
+  --font-mono:    'Share Tech Mono', 'Courier New', monospace;
+  --font-ui:      'Oxanium', system-ui, sans-serif;
+}
+
+/* ── Reset & Base ───────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-ui);
+  background-color: var(--surface-bg);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+
+  /* Subtle grid texture */
+  background-image:
+    linear-gradient(rgba(37,99,235,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37,99,235,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Override Pico defaults that conflict */
+[data-theme], :root {
+  --background-color: transparent;
+  --color: var(--text-primary);
+}
+
+/* ── Container ──────────────────────────────────────────── */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+.site-header {
+  background: linear-gradient(135deg, #0d1526 0%, #131b35 60%, #0f1e3d 100%);
+  border-bottom: 1px solid var(--surface-border);
+  padding: 2rem 0 1.75rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.site-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 120% at 50% -20%, rgba(37,99,235,0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.site-header .container {
+  position: relative;
+  z-index: 1;
+}
+
+.site-header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #93c5fd 0%, #3b82f6 50%, #60a5fa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.35rem;
+}
+
+.site-header .subtitle {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.03em;
+  margin-bottom: 0.5rem;
+}
+
+.site-header .project-info {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+#current-state-display {
+  font-family: var(--font-mono);
+  color: var(--state-active);
+  background: rgba(34,197,94,0.1);
+  border: 1px solid rgba(34,197,94,0.25);
+  padding: 0.15rem 0.6rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+}
+
+/* ── Main layout grid ───────────────────────────────────── */
+.main-content {
+  padding: 2.5rem 0;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Section headings ───────────────────────────────────── */
+h2 {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+h3 {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 0.6rem;
+}
+
+/* ── ATM Section ────────────────────────────────────────── */
+.atm-section h2 {
+  color: var(--text-secondary);
+}
+
+/* ── ATM Machine chassis ────────────────────────────────── */
+.atm-machine {
+  background: var(--chassis-bg);
+  border: 1px solid var(--chassis-border);
+  border-radius: var(--radius-xl);
+  padding: 1.75rem;
+  box-shadow: var(--chassis-shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.atm-machine::before {
+  /* Top edge shine */
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(96,165,250,0.5), transparent);
+}
+
+/* ── ATM Screen ─────────────────────────────────────────── */
+.atm-screen {
+  background: linear-gradient(135deg, var(--screen-bg-from) 0%, var(--screen-bg-to) 100%);
+  color: var(--screen-text);
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+  line-height: 1.5;
+  padding: 1.75rem;
+  border-radius: var(--radius-md);
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-shadow:
+    inset 0 2px 8px rgba(0,0,0,0.4),
+    0 0 0 1px rgba(37,99,235,0.3),
+    0 0 24px var(--screen-glow);
+  margin-bottom: 1.25rem;
+  transition: box-shadow 0.3s ease, color 0.3s ease;
+  word-break: break-word;
+  letter-spacing: 0.03em;
+}
+
+/* State-specific screen colors */
+.atm-screen.state-idle       { color: #60a5fa; }
+.atm-screen.state-success,
+.atm-screen.state-done       { color: #4ade80; box-shadow: inset 0 2px 8px rgba(0,0,0,0.4), 0 0 24px rgba(74,222,128,0.25); }
+.atm-screen.state-error,
+.atm-screen.state-rejected   { color: #f87171; box-shadow: inset 0 2px 8px rgba(0,0,0,0.4), 0 0 24px rgba(248,113,113,0.25); }
+.atm-screen.state-warning    { color: #fbbf24; }
+
+/* ── Loading Spinner ─────────────────────────────────────── */
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-family: var(--font-mono);
+}
+
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid rgba(96,165,250,0.15);
+  border-top-color: var(--atm-primary);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── ATM Controls wrapper ───────────────────────────────── */
+.atm-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+/* ── Shared button base ─────────────────────────────────── */
+button {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: all 0.18s ease;
+  min-height: 44px;
+  padding: 0.6rem 1.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  text-transform: uppercase;
+  font-size: 0.82rem;
+}
+
+button:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 2px;
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Primary button ─────────────────────────────────────── */
+.btn-primary {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 4px 12px rgba(37,99,235,0.35);
+}
+.btn-primary:hover {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  box-shadow: 0 6px 16px rgba(37,99,235,0.5);
+  transform: translateY(-1px);
+}
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.btn-large {
+  width: 100%;
+  font-size: 1rem;
+  padding: 0.85rem;
+  letter-spacing: 0.1em;
+}
+
+/* ── Secondary button ───────────────────────────────────── */
+.btn-secondary {
+  background: var(--surface-raised);
+  color: var(--text-secondary);
+  border: 1px solid var(--surface-border);
+  width: 100%;
+}
+.btn-secondary:hover {
+  background: #2a2f4a;
+  color: var(--text-primary);
+  border-color: #4a5280;
+}
+
+/* ── Success button ─────────────────────────────────────── */
+.btn-success {
+  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 4px 12px rgba(22,163,74,0.35);
+}
+.btn-success:hover {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  box-shadow: 0 6px 16px rgba(22,163,74,0.5);
+  transform: translateY(-1px);
+}
+
+/* ── Danger button ──────────────────────────────────────── */
+.btn-danger {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 4px 12px rgba(220,38,38,0.35);
+}
+.btn-danger:hover {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  box-shadow: 0 6px 16px rgba(220,38,38,0.5);
+  transform: translateY(-1px);
+}
+
+/* ── Small button ───────────────────────────────────────── */
+.btn-small {
+  font-size: 0.72rem;
+  padding: 0.35rem 0.75rem;
+  min-height: 32px;
+  background: var(--surface-raised);
+  color: var(--text-secondary);
+  border: 1px solid var(--surface-border);
+}
+.btn-small:hover {
+  background: #2a2f4a;
+  color: var(--text-primary);
+}
+
+/* ── Numeric Keypad ─────────────────────────────────────── */
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.keypad-btn {
+  aspect-ratio: 1;
+  font-size: 1.35rem;
+  font-weight: 700;
+  font-family: var(--font-display);
+  background: linear-gradient(160deg, #2a2f4a 0%, #1e2340 100%);
+  color: var(--text-primary);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 2px 0 #111420, inset 0 1px 0 rgba(255,255,255,0.06);
+  min-height: 52px;
+  aspect-ratio: auto;
+  transition: all 0.1s ease;
+}
+
+.keypad-btn:hover {
+  background: linear-gradient(160deg, #353b60 0%, #292e50 100%);
+  border-color: #4a5280;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+.keypad-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 #111420, inset 0 2px 4px rgba(0,0,0,0.4);
+}
+
+.btn-submit {
+  grid-column: span 3;
+  aspect-ratio: auto;
+  font-size: 0.78rem;
+  background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+  color: #93c5fd;
+  border-color: #2563eb44;
+}
+.btn-submit:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #fff;
+}
+
+/* ── Transaction Menu ───────────────────────────────────── */
+.transaction-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.btn-transaction {
+  width: 100%;
+  font-size: 0.9rem;
+  padding: 0.9rem 1.25rem;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  border: 1px solid var(--surface-border);
+  justify-content: flex-start;
+  gap: 0.6rem;
+}
+.btn-transaction:hover {
+  background: #2a2f4a;
+  border-color: var(--atm-primary);
+  color: #93c5fd;
+  transform: translateX(3px);
+  box-shadow: -3px 0 0 var(--atm-primary);
+}
+
+/* ── Amount Presets ─────────────────────────────────────── */
+.amount-presets {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+}
+
+.preset-btn {
+  font-size: 0.82rem;
+  padding: 0.55rem 0.4rem;
+  background: var(--surface-raised);
+  color: var(--text-secondary);
+  border: 1px solid var(--surface-border);
+  min-height: 40px;
+}
+.preset-btn:hover {
+  background: #1e3a8a;
+  color: #93c5fd;
+  border-color: #2563eb;
+}
+
+/* ── Confirm/Cancel row ─────────────────────────────────── */
+.confirm-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+.confirm-buttons .btn-success,
+.confirm-buttons .btn-danger {
+  width: 100%;
+}
+
+/* ── Keyboard shortcuts ─────────────────────────────────── */
+.keyboard-shortcuts {
+  margin-top: 1.25rem;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--surface-card);
+}
+
+.keyboard-shortcuts details {
+  margin: 0;
+}
+
+.keyboard-shortcuts summary {
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  padding: 0.65rem 1rem;
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+}
+.keyboard-shortcuts summary::-webkit-details-marker { display: none; }
+.keyboard-shortcuts summary:hover { color: var(--text-primary); }
+
+.keyboard-shortcuts ul {
+  list-style: none;
+  padding: 0.5rem 1rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  border-top: 1px solid var(--surface-border);
+}
+
+.keyboard-shortcuts li {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+kbd {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  background: var(--surface-raised);
+  border: 1px solid var(--surface-border);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  padding: 0.1rem 0.4rem;
+  color: var(--text-primary);
+  min-width: 1.6rem;
+  text-align: center;
+}
+
+/* ── Diagram Sidebar ────────────────────────────────────── */
+.diagram-sidebar {
+  background: var(--surface-card);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  position: sticky;
+  top: 1.5rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.diagram-sidebar:not(.visible) {
+  display: none;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.sidebar-header h2 {
+  margin-bottom: 0;
+}
+
+/* ── Diagram Container ──────────────────────────────────── */
+.diagram-container {
+  width: 100%;
+  background: #090d1a;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--surface-border);
+  overflow: hidden;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.diagram-container svg {
+  width: 100%;
+  height: auto;
+}
+
+/* SVG state diagram styles */
+.state {
+  fill: var(--state-inactive);
+  stroke: #64748b;
+  stroke-width: 2;
+  transition: all 0.3s ease;
+}
+
+.state.active {
+  fill: var(--state-active);
+  stroke: #16a34a;
+  stroke-width: 3;
+  filter: drop-shadow(0 0 10px rgba(34, 197, 94, 0.6));
+}
+
+.state.accept {
+  stroke-width: 4;
+}
+
+.state-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: #1e293b;
+  font-weight: bold;
+  pointer-events: none;
+}
+
+.state-label.active-label {
+  fill: #052e16;
+}
+
+.transition {
+  stroke: var(--transition-color);
+  stroke-width: 2;
+  fill: none;
+  marker-end: url(#arrowhead);
+}
+
+.transition.pulse {
+  animation: pulse 0.6s ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% { stroke-width: 2; opacity: 1; }
+  50%       { stroke-width: 5; opacity: 0.6; }
+}
+
+.transition-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  fill: #94a3b8;
+}
+
+/* ── Diagram Legend ─────────────────────────────────────── */
+.diagram-legend {
+  margin-top: 1rem;
+}
+
+.diagram-legend h3 {
+  margin-bottom: 0.5rem;
+}
+
+.diagram-legend ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.diagram-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #64748b;
+}
+.legend-dot.state-active   { background: var(--state-active); border-color: #16a34a; }
+.legend-dot.state-inactive { background: var(--state-inactive); }
+
+.legend-circle-double {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 3px double #64748b;
+  background: var(--state-inactive);
+}
+
+/* ── String Tester Section ──────────────────────────────── */
+.tester-section {
+  background: var(--surface-card);
+  border-top: 1px solid var(--surface-border);
+  border-bottom: 1px solid var(--surface-border);
+  padding: 2.5rem 0;
+}
+
+.section-description {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.25rem;
+}
+
+/* ── Tester input area ──────────────────────────────────── */
+.tester-input-area {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-bottom: 1.75rem;
+}
+
+.tester-input-area label {
+  font-size: 0.82rem;
+  font-family: var(--font-display);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+textarea#test-input {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  background: var(--surface-raised);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  padding: 0.85rem 1rem;
+  resize: vertical;
+  line-height: 1.6;
+  transition: border-color 0.2s;
+}
+
+textarea#test-input::placeholder {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+textarea#test-input:focus {
+  outline: none;
+  border-color: var(--atm-primary);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.2);
+}
+
+.tester-buttons {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.tester-buttons .btn-primary {
+  flex: 1;
+}
+.tester-buttons .btn-secondary {
+  width: auto;
+}
+
+/* ── Test cases grid ────────────────────────────────────── */
+.test-cases {
+  margin-bottom: 1.5rem;
+}
+
+.help-text {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-bottom: 0.6rem;
+}
+
+.test-cases-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.test-cases-grid button {
+  font-size: 0.75rem;
+  padding: 0.4rem 0.85rem;
+  min-height: 36px;
+  background: var(--surface-raised);
+  border: 1px solid var(--surface-border);
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+.test-cases-grid button:hover {
+  border-color: var(--atm-primary);
+  color: #93c5fd;
+  background: rgba(37,99,235,0.12);
+}
+
+/* ── Test Description ───────────────────────────────────── */
+.test-description {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  background: var(--surface-raised);
+  border-left: 3px solid var(--atm-primary);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 0.65rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.test-description:empty { display: none; }
+
+/* ── Test Result ────────────────────────────────────────── */
+.test-result {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1.25rem;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.test-result:empty { display: none; }
+
+.test-result.accepted {
+  background: rgba(22,163,74,0.12);
+  border: 1px solid rgba(22,163,74,0.4);
+  color: #4ade80;
+}
+
+.test-result.rejected {
+  background: rgba(220,38,38,0.12);
+  border: 1px solid rgba(220,38,38,0.4);
+  color: #f87171;
+}
+
+/* ── Execution Trace ────────────────────────────────────── */
+.trace-section h3 {
+  margin-bottom: 0.75rem;
+}
+
+.trace-output {
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--surface-border);
+}
+
+.trace-output:empty { display: none; }
+
+.trace-output table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
+.trace-output th {
+  background: var(--surface-raised);
+  color: var(--text-secondary);
+  padding: 0.5rem 0.85rem;
+  text-align: left;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.trace-output td {
+  padding: 0.4rem 0.85rem;
+  border-bottom: 1px solid rgba(46,53,84,0.5);
+  color: var(--text-secondary);
+}
+
+.trace-output tr:last-child td {
+  border-bottom: none;
+}
+
+.trace-output tr:hover td {
+  background: rgba(37,99,235,0.07);
+}
+
+.trace-output td:first-child { color: var(--atm-primary); }
+.trace-output td:nth-child(2) { color: #f59e0b; }
+.trace-output td:nth-child(3) { color: #60a5fa; }
+.trace-output td:last-child  { color: var(--state-active); }
+
+/* ── Transition Log Section ─────────────────────────────── */
+.log-section {
+  padding: 2.5rem 0;
+}
+
+.log-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.transition-log {
+  background: #090d1a;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+  max-height: 320px;
+  overflow-y: auto;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  scroll-behavior: smooth;
+}
+
+/* Scrollbar */
+.transition-log::-webkit-scrollbar { width: 6px; }
+.transition-log::-webkit-scrollbar-track { background: transparent; }
+.transition-log::-webkit-scrollbar-thumb {
+  background: var(--surface-border);
+  border-radius: 3px;
+}
+.transition-log::-webkit-scrollbar-thumb:hover { background: #4a5280; }
+
+.log-empty {
+  color: var(--text-muted);
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+/* Log entry */
+.log-entry {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: var(--radius-sm);
+  animation: fadeSlideIn 0.2s ease;
+}
+.log-entry:hover { background: rgba(37,99,235,0.07); }
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateX(-6px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.log-entry .log-time   { color: var(--text-muted); font-size: 0.7rem; white-space: nowrap; }
+.log-entry .log-from   { color: var(--atm-primary); }
+.log-entry .log-arrow  { color: var(--text-muted); }
+.log-entry .log-input  { color: #f59e0b; }
+.log-entry .log-to     { color: var(--state-active); }
+.log-entry .log-sep    { color: var(--text-muted); }
+
+/* ── Footer ─────────────────────────────────────────────── */
+.site-footer {
+  background: var(--surface-card);
+  border-top: 1px solid var(--surface-border);
+  padding: 2rem 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 2;
+}
+
+.site-footer p { margin-bottom: 0.25rem; }
+
+.site-footer strong { color: var(--text-secondary); }
+
+.site-footer a {
+  color: #60a5fa;
+  text-decoration: none;
+}
+.site-footer a:hover {
+  color: #93c5fd;
+  text-decoration: underline;
+}
+
+.alphabet-info,
+.states-info,
+.tech-stack {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .site-header { padding: 1.5rem 0 1.25rem; }
+
+  .atm-machine { padding: 1.25rem; }
+
+  .amount-presets {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .keypad-btn { min-height: 48px; font-size: 1.2rem; }
+
+  .diagram-sidebar {
+    position: static;
+    margin-top: 0;
+  }
+
+  .tester-buttons {
+    flex-direction: column;
+  }
+
+  .confirm-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .test-cases-grid { gap: 0.35rem; }
+}
+
+@media (max-width: 480px) {
+  .container { padding: 0 1rem; }
+
+  .site-header h1 { font-size: 1.35rem; }
+
+  .atm-screen { font-size: 0.95rem; padding: 1.25rem; }
+
+  .keypad { gap: 0.35rem; }
+}
+
+/* ── Utility animations ─────────────────────────────────── */
+@keyframes screenFlash {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+.screen-flash {
+  animation: screenFlash 0.3s ease 2;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+.shake {
+  animation: shake 0.4s ease;
+}
