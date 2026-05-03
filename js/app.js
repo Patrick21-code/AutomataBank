@@ -364,6 +364,15 @@ function setupEventListeners() {
     btnRetry.addEventListener('click', handleRetry);
   }
   
+  // Clear log button
+  const btnClearLog = document.getElementById('btn-clear-log');
+  if (btnClearLog) {
+    btnClearLog.addEventListener('click', () => {
+      clearTransitionLog();
+      console.log('Transition log cleared');
+    });
+  }
+  
   // Diagram panel toggle
   const diagramToggleBtn = document.getElementById('diagram-toggle-btn');
   const diagramPanel = document.getElementById('diagram-panel');
