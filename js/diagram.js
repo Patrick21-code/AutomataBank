@@ -282,7 +282,22 @@ function createStateDiagram() {
 // current state: green glow
 // other state: gray inactive
 
-function highlightState(stateId) {
+// Map state values to state IDs for diagram
+const STATE_VALUE_TO_ID = {
+  'idle': 'S0',
+  'account_entry': 'S1',
+  'pin_entry': 'S2',
+  'authenticated': 'S3',
+  'amount_entry': 'S4',
+  'balance_display': 'S5',
+  'rejected': 'S6',
+  'done': 'S7'
+};
+
+function highlightState(stateValue) {
+  // Convert state value to state ID for diagram
+  const stateId = STATE_VALUE_TO_ID[stateValue] || stateValue;
+  
   // Remove highlight from all states
   // emsures that only one state is highlighted at a time
   const allStates = document.querySelectorAll('.state-node');
@@ -304,7 +319,11 @@ function highlightState(stateId) {
 //animate the arrow when transitioning
 //shows the path taken through the diagram
 
-function animateTransition(fromState, toState) {
+function animateTransition(fromStateValue, toStateValue) {
+  // Convert state values to state IDs for diagram
+  const fromState = STATE_VALUE_TO_ID[fromStateValue] || fromStateValue;
+  const toState = STATE_VALUE_TO_ID[toStateValue] || toStateValue;
+  
   // Find the transition arrow
   const transition = document.querySelector(
     `.transition[data-from="${fromState}"][data-to="${toState}"]`
@@ -341,9 +360,6 @@ function toggleDiagram(visible) {
   if (toggleBtn) {
     toggleBtn.textContent = visible ? 'Hide Diagram' : 'Show Diagram';
   }
-  
-  // Save preference to localStorage
-  localStorage.setItem('diagramVisible', visible);
 }
 
 //initialization
@@ -375,15 +391,9 @@ function initializeDiagram() {
     });
   }
 
-  // Restore visibility preference
-  const savedPreference = localStorage.getItem('diagramVisible');
-  if (savedPreference !== null) {
-    toggleDiagram(savedPreference === 'true');
-  } else {
-    // Default: visible on desktop, hidden on mobile
-    const isMobile = window.innerWidth < 768;
-    toggleDiagram(!isMobile);
-  }
+  // Default: visible on desktop, hidden on mobile
+  const isMobile = window.innerWidth < 768;
+  toggleDiagram(!isMobile);
   
   console.log('Diagram initialized successfully');
 }
