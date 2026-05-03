@@ -31,13 +31,14 @@
         </div>
     </header>
 
-    <!--atm smulator and state diagram-->
+    <!--atm simulator and transition log-->
     <main class="main-content">
         <div class="container">
-            
-            <!-- ATM Simulator -->
-            <section class="atm-section">
-            <h2>ATM Simulator</h2>
+            <div class="content-grid">
+                
+                <!-- LEFT COLUMN: ATM Simulator -->
+                <section class="atm-section">
+                <h2>ATM Simulator</h2>
             
             <!-- ATM Machine Container -->
             <div class="atm-machine">
@@ -134,6 +135,22 @@
             
             </section>
             
+            <!-- RIGHT COLUMN: Transition Log -->
+            <aside class="log-section">
+                <div class="log-header">
+                    <h2>Transition Log</h2>
+                    <button id="btn-clear-log" class="btn-small">
+                    Clear Log
+                    </button>
+                </div>
+                
+                <div id="transition-log" class="transition-log">
+                    <!-- Log entries will be inserted by JavaScript -->
+                    <p class="log-empty">No transitions yet. Start by inserting a card.</p>
+                </div>
+            </aside>
+            
+            </div>
         </div>
     </main>
 
@@ -234,23 +251,6 @@
             </div>
         </div>
         
-        </div>
-    </section>
-
-    <!--transition log-->
-    <section class="log-section">
-        <div class="container">
-        <div class="log-header">
-            <h2>Transition Log</h2>
-            <button id="btn-clear-log" class="btn-small">
-            Clear Log
-            </button>
-        </div>
-        
-        <div id="transition-log" class="transition-log">
-            <!-- Log entries will be inserted by JavaScript -->
-            <p class="log-empty">No transitions yet. Start by inserting a card.</p>
-        </div>
         </div>
     </section>
 
