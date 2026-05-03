@@ -370,3 +370,69 @@ function initializeApp() {
     alert('Failed to initialize application. Please check the console for errors.');
   }
 }
+
+//utility functions
+
+//resert the ATM to initial state
+function resetATM() {
+  console.log('Resetting ATM...');
+  
+  // Reset DFA
+  atmDFA.reset();
+  
+  // Reset UI
+  updateUIForState('S0');
+  updateScreen('S0', 'Welcome! Please press Enter to begin.');
+  
+  // Reset diagram
+  if (diagramInitialized) {
+    highlightState('S0');
+  }
+  
+  // Clear log
+  clearTransitionLog();
+  
+  console.log('ATM reset complete');
+}
+
+//FOR DEBUGGING
+function getSystemInfo() {
+  return {
+    currentState: atmDFA.currentState,
+    stateDescription: atmDFA.getStateDescription(),
+    accountBuffer: atmDFA.accountBuffer ? '(entered)' : '(empty)',
+    pinBuffer: '•'.repeat(atmDFA.pinBuffer.length),  // Masked
+    pinFailedAttempts: atmDFA.pinFailedAttempts,
+    balance: atmDFA.getBalance(),
+    transactionHistory: atmDFA.getTransitionHistory(),
+    isInAcceptState: atmDFA.isInAcceptState()
+  };
+}
+
+function enableDebugMode() {
+  console.log('Debug mode enabled');
+  
+  // Log every transition
+  const originalProcessTransition = processTransition;
+  processTransition = function(input) {
+    console.log('=== TRANSITION ===');
+    console.log('Input:', input);
+    console.log('Before:', getSystemInfo());
+    
+    originalProcessTransition(input);
+    
+    console.log('After:', getSystemInfo());
+    console.log('==================');
+  };
+  
+  // Make functions globally accessible
+  window.atmDFA = atmDFA;
+  window.getSystemInfo = getSystemInfo;
+  window.resetATM = resetATM;
+  
+  console.log('Debug functions available:');
+  console.log('- atmDFA: Access the DFA instance');
+  console.log('- getSystemInfo(): Get current state info');
+  console.log('- resetATM(): Reset to initial state');
+}
+
