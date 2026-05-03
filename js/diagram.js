@@ -277,3 +277,48 @@ function createStateDiagram() {
   
   return svg;
 }
+
+//highlight current state
+// current state: green glow
+// other state: gray inactive
+
+function highlightState(stateId) {
+  // Remove highlight from all states
+  // emsures that only one state is highlighted at a time
+  const allStates = document.querySelectorAll('.state-node');
+  allStates.forEach(node => {
+    node.classList.remove('active');
+  });
+
+  // Add highlight to current state
+  const currentState = document.getElementById(`state-${stateId}`);
+  if (currentState) {
+    currentState.classList.add('active');
+    
+    // Scroll into view if diagram is scrollable
+    currentState.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+
+//animate transitions
+//animate the arrow when transitioning
+//shows the path taken through the diagram
+
+function animateTransition(fromState, toState) {
+  // Find the transition arrow
+  const transition = document.querySelector(
+    `.transition[data-from="${fromState}"][data-to="${toState}"]`
+  );
+
+  if (!transition) {
+    console.warn(`Transition not found: ${fromState} -> ${toState}`);
+    return;
+  }
+  // Add pulse animation class
+  transition.classList.add('pulse');
+  
+  // Remove after animation completes
+  setTimeout(() => {
+    transition.classList.remove('pulse');
+  }, 600);
+}
