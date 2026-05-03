@@ -248,3 +248,17 @@ function displayResult(accepted, finalState) {
   flashScreen(accepted ? 'success' : 'error');
 }
 
+function displayError(errorMessage) {
+  const resultContainer = document.getElementById('test-result');
+  if (!resultContainer) return;
+  
+  resultContainer.innerHTML = `
+    <div class="result-error">
+      <h3>⚠ Error</h3>
+      <p>${errorMessage}</p>
+    </div>
+  `;
+  
+  flashScreen('error');
+}
+
