@@ -262,3 +262,60 @@ function displayError(errorMessage) {
   flashScreen('error');
 }
 
+//predefined test cases for the example for users
+const TEST_CASES = [
+  {
+    name: 'Happy Path - Successful Withdrawal',
+    input: 'start enter_digit enter_digit enter_digit enter_digit enter_digit submit_account enter_digit enter_digit enter_digit enter_digit submit_pin select_withdraw enter_amount enter_amount enter_amount confirm reset',
+    expectedResult: 'accepted',
+    description: 'Complete successful transaction: start, enter account (12345), enter correct PIN (1234), withdraw money, reset. Should end in S7 (accept state).'
+  },
+  {
+    name: 'Balance Check with Back Button',
+    input: 'start enter_digit enter_digit enter_digit enter_digit enter_digit submit_account enter_digit enter_digit enter_digit enter_digit submit_pin select_balance back select_withdraw enter_amount enter_amount enter_amount confirm reset',
+    expectedResult: 'accepted',
+    description: 'Check balance, use back button to return to menu, then withdraw. Tests the NEW S5 → S3 back button feature.'
+  },
+  {
+    name: 'Wrong Account Recovery',
+    input: 'start enter_digit submit_account enter_digit enter_digit enter_digit enter_digit enter_digit submit_account enter_digit enter_digit enter_digit enter_digit submit_pin select_balance back cancel',
+    expectedResult: 'accepted',
+    description: 'Enter wrong account once, retry with correct account, complete transaction. Tests account retry at S1.'
+  },
+  {
+    name: 'PIN Lockout - 3 Wrong PINs',
+    input: 'start enter_digit enter_digit enter_digit enter_digit enter_digit submit_account enter_digit enter_digit enter_digit enter_digit submit_pin enter_digit enter_digit enter_digit enter_digit enter_digit submit_account enter_digit enter_digit enter_digit enter_digit submit_pin enter_digit enter_digit enter_digit enter_digit enter_digit submit_account enter_digit enter_digit enter_digit enter_digit submit_pin',
+    expectedResult: 'rejected',
+    description: 'Enter wrong PIN 3 times. Card gets blocked, ends at S0 (not accept state). Tests security feature.'
+  },
+  {
+    name: 'Transaction Cancelled',
+    input: 'start enter_digit enter_digit enter_digit enter_digit enter_digit submit_account enter_digit enter_digit enter_digit enter_digit submit_pin cancel',
+    expectedResult: 'rejected',
+    description: 'Authenticate successfully but cancel before completing transaction. Ends at S0 (not accept state).'
+  },
+  {
+    name: 'Account Entry Self-Loop',
+    input: 'start enter_digit enter_digit enter_digit',
+    expectedResult: 'rejected',
+    description: 'Enter only 3 digits (incomplete account). Stays at S1 (not accept state). Demonstrates self-loop.'
+  },
+  {
+    name: 'PIN Entry Self-Loop',
+    input: 'start enter_digit enter_digit enter_digit enter_digit enter_digit submit_account enter_digit enter_digit',
+    expectedResult: 'rejected',
+    description: 'Enter account correctly but only 2 PIN digits. Stays at S2 (not accept state). Demonstrates self-loop.'
+  },
+  {
+    name: 'Amount Entry Self-Loop',
+    input: 'start enter_digit enter_digit enter_digit enter_digit enter_digit submit_account enter_digit enter_digit enter_digit enter_digit submit_pin select_withdraw enter_amount enter_amount',
+    expectedResult: 'rejected',
+    description: 'Enter amount digits but don\'t confirm. Stays at S4 (not accept state). Demonstrates self-loop.'
+  },
+  {
+    name: 'No Start Command',
+    input: 'enter_digit submit_account',
+    expectedResult: 'rejected',
+    description: 'Try to enter account without starting transaction. Invalid transitions, stays at S0.'
+  }
+];
