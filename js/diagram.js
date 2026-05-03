@@ -45,18 +45,19 @@ const TRANSITIONS = [
   // Start
   { from: 'S0', to: 'S1', label: 'start', path: 'straight' },
   
-  // Self-loops
-  { from: 'S1', to: 'S1', label: 'digit', path: 'loop' },  // Account entry
-  { from: 'S2', to: 'S2', label: 'digit', path: 'loop' },  // PIN entry
-  { from: 'S4', to: 'S4', label: 'amount', path: 'loop' }, // Amount entry
+  // Self-loops for input states (digit entry, backspace, clear)
+  { from: 'S1', to: 'S1', label: 'digit/⌫/clear', path: 'loop' },  // Account entry
+  { from: 'S2', to: 'S2', label: 'digit/⌫/clear', path: 'loop' },  // PIN entry
+  { from: 'S4', to: 'S4', label: 'digit/⌫/clear', path: 'loop' }, // Amount entry
   
   // Account validation
-  { from: 'S1', to: 'S2', label: 'correct', path: 'straight' },
-  { from: 'S1', to: 'S6', label: 'wrong', path: 'curve' },
+  { from: 'S1', to: 'S2', label: 'submit', path: 'straight' },
+  { from: 'S1', to: 'S0', label: 'cancel', path: 'curve' },
   
   // PIN validation
   { from: 'S2', to: 'S3', label: 'correct', path: 'straight' },
   { from: 'S2', to: 'S6', label: 'wrong', path: 'curve' },
+  { from: 'S2', to: 'S0', label: 'cancel', path: 'arc' },
   
   // Transaction selection
   { from: 'S3', to: 'S4', label: 'withdraw', path: 'straight' },
@@ -67,17 +68,18 @@ const TRANSITIONS = [
   { from: 'S4', to: 'S3', label: 'cancel', path: 'curve' },
   
   // Balance display
-  { from: 'S5', to: 'S3', label: 'back', path: 'curve' },  // Back button!
+  { from: 'S5', to: 'S3', label: 'back', path: 'curve' },
   { from: 'S5', to: 'S0', label: 'cancel', path: 'arc' },
   
-  // Retry arc (S6 back to S1)
-  { from: 'S6', to: 'S1', label: 'retry', path: 'arc' },
+  // Retry paths from rejected state
+  { from: 'S6', to: 'S2', label: 'retry', path: 'arc' },
+  { from: 'S6', to: 'S1', label: 'new acct', path: 'curve' },
   { from: 'S6', to: 'S0', label: 'reset', path: 'arc' },
   
   // Done state
   { from: 'S7', to: 'S0', label: 'reset', path: 'curve' },
   
-  // Cancel paths
+  // Cancel from authenticated state
   { from: 'S3', to: 'S0', label: 'cancel', path: 'arc' }
 ];
 
