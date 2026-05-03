@@ -113,7 +113,7 @@ transition(input) {
         case STATES.S1:         //account entry(self-loop!)
             if (input === INPUTS.ENTER_DIGIT) {
                 toState = STATES.S1;   //stay at s1 while collecting digits
-                this.accountBuffer += '0'    //Placeholder (actual digit comes from UI)
+                // Note: actual digit is added by UI handler before calling transition
                 message = `Account: ${this.accountBuffer}`; //show in plain text
                 
                 if (this.accountBuffer.length === 5) {
@@ -145,7 +145,7 @@ transition(input) {
         case STATES.S2:     //pin entry (self-loop)
             if (input === INPUTS.ENTER_DIGIT) {
                 toState = STATES.S2     //stay at S2 while collecting digits
-                this.pinBuffer += '0'   //placeholder (actual digit comes from UI)
+                // Note: actual digit is added by UI handler before calling transition
                 message = 'PIN: ' + '•'.repeat(this.pinBuffer.length)
 
                 if (this.pinBuffer.length === 4)
@@ -203,7 +203,7 @@ transition(input) {
         case STATES.S4:         //amount entry (self-loop)
             if (input === INPUTS.ENTER_AMOUNT) {
                 toState = STATES.S4     //self-loop: stay at S4 while collecting digits
-                this.amountBuffer += '0'    //placeholder
+                // Note: actual digit is added by UI handler before calling transition
                 message = 'Amount: $' + this.amountBuffer
             } else if (input === INPUTS.CONFIRM) {
                 const amount = parseInt(this.amountBuffer)
@@ -224,7 +224,7 @@ transition(input) {
                 this.amountBuffer = ''
                 action = 'show_transaction_menu'
             } else {
-                message = 'Amount: $' + this.amountBuffer
+                message = 'Amount: ' + this.amountBuffer
             }
             break
         case STATES.S5:    //balance display
