@@ -112,6 +112,12 @@ function handleAction(action) {
   }
 }
 
+//handleStart - User clicks the Start button
+function handleStart() {
+  console.log('Start button clicked');
+  processTransition(INPUTS.START);
+}
+
 //handleDigitPress
 function handleDigitPress(digit) {
   console.log(`Digit pressed: ${digit}`);
@@ -359,11 +365,10 @@ function initializeApp() {
     console.log('✓ Event listeners set up');
     
     // Step 6: Display welcome message
-    updateScreen('S0', 'Welcome! Please insert your card to begin.');
+    updateScreen('S0', 'Welcome! Please press START to begin.');
     
     console.log('=== Initialization complete ===');
     console.log('Current state:', atmDFA.currentState);
-    console.log('Correct PIN:', atmDFA.correctPin);
     
   } catch (error) {
     console.error('Initialization failed:', error);
@@ -434,5 +439,13 @@ function enableDebugMode() {
   console.log('- atmDFA: Access the DFA instance');
   console.log('- getSystemInfo(): Get current state info');
   console.log('- resetATM(): Reset to initial state');
+}
+
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeApp);
+} else {
+  // DOM already loaded
+  initializeApp();
 }
 
