@@ -66,3 +66,48 @@ function processTransition(input) {
     isAnimating = false;
   }, 300);
 }
+
+//handleAction - handle special actions from DFA
+//just makes the UI better
+function handleAction(action) {
+  if (!action) return;
+  
+  switch (action) {
+    case 'show_keypad':
+      showKeypad(true);
+      break;
+      
+    case 'show_transaction_menu':
+      showTransactionMenu(true);
+      break;
+      
+    case 'show_confirm_button':
+      showConfirmButtons(true);
+      break;
+      
+    case 'reset_atm':
+      animateReset();
+      break;
+      
+    case 'block_card':
+      flashScreen('error');
+      // Could add sound effect here
+      break;
+      
+    case 'complete_transaction':
+      flashScreen('success');
+      // Could add sound effect here
+      break;
+      
+    case 'auto_submit':
+      // Auto-submit PIN after 4 digits
+      setTimeout(() => {
+        handleSubmitPin();
+      }, 300);
+      break;
+      
+    default:
+      // Unknown action - just log it
+      console.log(`Unknown action: ${action}`);
+  }
+}
