@@ -34,9 +34,8 @@
     <!--atm smulator and state diagram-->
     <main class="main-content">
         <div class="container">
-        <div class="content-grid">
             
-            <!-- LEFT COLUMN: ATM Simulator -->
+            <!-- ATM Simulator -->
             <section class="atm-section">
             <h2>ATM Simulator</h2>
             
@@ -135,14 +134,32 @@
             
             </section>
             
-            <!-- RIGHT COLUMN: State Diagram -->
-            <aside id="diagram-sidebar" class="diagram-sidebar visible">
-            <div class="sidebar-header">
-                <h2>State Diagram</h2>
-                <button id="btn-toggle-diagram" class="btn-small">
-                Hide Diagram
-                </button>
-            </div>
+        </div>
+    </main>
+
+    <!-- Hamburger Menu Button (Fixed Position) -->
+    <button id="diagram-toggle-btn" class="diagram-toggle-btn" aria-label="Toggle diagram panel">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+    </button>
+
+    <!-- Overlay Backdrop -->
+    <div id="diagram-overlay" class="diagram-overlay"></div>
+
+    <!-- Diagram Side Panel (Slide-out) -->
+    <aside id="diagram-panel" class="diagram-panel">
+        <div class="diagram-panel-header">
+            <h2>State Diagram</h2>
+            <button id="btn-close-panel" class="btn-close-panel">
+                ✕ Close
+            </button>
+        </div>
+        
+        <div class="diagram-panel-content">
+            <p class="diagram-description">
+                Visual representation of the DFA states and transitions
+            </p>
             
             <!-- SVG Container (diagram.js will insert SVG here) -->
             <div id="diagram-container" class="diagram-container">
@@ -153,16 +170,13 @@
             <div class="diagram-legend">
                 <h3>Legend</h3>
                 <ul>
-                <li><span class="legend-dot state-active"></span> Current State</li>
-                <li><span class="legend-dot state-inactive"></span> Inactive State</li>
-                <li><span class="legend-circle-double"></span> Accept State (S7)</li>
+                    <li><span class="legend-dot state-active"></span> Current State</li>
+                    <li><span class="legend-dot state-inactive"></span> Inactive State</li>
+                    <li><span class="legend-circle-double"></span> Accept State (S7)</li>
                 </ul>
             </div>
-            </aside>
-            
         </div>
-        </div>
-    </main>
+    </aside>
 
     <!--string tester-->
     <section class="tester-section">
