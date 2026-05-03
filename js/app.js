@@ -9,7 +9,7 @@
 
 //global state
 //dfa instance needs to be accessible from all event handlers
-//keeps state consistent across the applicatioin
+//keeps state consistent across the application
 
 // The DFA instance (initialized in initializeApp)
 let atmDFA = null;
