@@ -345,3 +345,45 @@ function toggleDiagram(visible) {
   // Save preference to localStorage
   localStorage.setItem('diagramVisible', visible);
 }
+
+//initialization
+//set up the diagram on page load
+function initializeDiagram() {
+  console.log('Initializing state diagram...');
+  
+  // Find the container
+  const container = document.getElementById('diagram-container');
+  if (!container) {
+    console.error('Diagram container not found!');
+    return;
+  }
+
+  // Create and insert the diagram
+  const diagram = createStateDiagram();
+  container.appendChild(diagram);
+  
+  // Highlight initial state
+  highlightState('S0');
+  
+  // Set up toggle button
+  const toggleBtn = document.getElementById('btn-toggle-diagram');
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      const sidebar = document.getElementById('diagram-sidebar');
+      const isVisible = sidebar.classList.contains('visible');
+      toggleDiagram(!isVisible);
+    });
+  }
+
+  // Restore visibility preference
+  const savedPreference = localStorage.getItem('diagramVisible');
+  if (savedPreference !== null) {
+    toggleDiagram(savedPreference === 'true');
+  } else {
+    // Default: visible on desktop, hidden on mobile
+    const isMobile = window.innerWidth < 768;
+    toggleDiagram(!isMobile);
+  }
+  
+  console.log('Diagram initialized successfully');
+}
