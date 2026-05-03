@@ -125,17 +125,17 @@ function handleDigitPress(digit) {
   // Determine which buffer to update based on current state
   const state = atmDFA.currentState;
   
-  if (state === STATES.S1) {
+  if (state === 'account_entry') {
     // Account entry - show in plain text
     atmDFA.accountBuffer += digit;
     updateScreen(atmDFA.currentState, `Account: ${atmDFA.accountBuffer}`);
   } 
-  else if (state === STATES.S2) {
+  else if (state === 'pin_entry') {
     // PIN entry
     atmDFA.pinBuffer += digit;
     updatePinDisplay(atmDFA.pinBuffer.length);
   }
-  else if (state === STATES.S4) {
+  else if (state === 'amount_entry') {
     // Amount entry
     atmDFA.amountBuffer += digit;
     updateAmountDisplay(atmDFA.amountBuffer);
@@ -365,7 +365,7 @@ function initializeApp() {
     console.log('✓ Event listeners set up');
     
     // Step 6: Display welcome message
-    updateScreen('S0', 'Welcome! Please press START to begin.');
+    updateScreen('idle', 'Welcome! Please press START to begin.');
     
     console.log('=== Initialization complete ===');
     console.log('Current state:', atmDFA.currentState);
@@ -386,8 +386,8 @@ function resetATM() {
   atmDFA.reset();
   
   // Reset UI
-  updateUIForState('S0');
-  updateScreen('S0', 'Welcome! Please press Enter to begin.');
+  updateUIForState('idle');
+  updateScreen('idle', 'Welcome! Please press START to begin.');
   
   // Reset diagram
   if (diagramInitialized) {
