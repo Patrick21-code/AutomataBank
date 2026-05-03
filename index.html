@@ -240,6 +240,37 @@
         </div>
     </section>
 
+  <!-- 
+    Footer - Project information and credits
+  -->
+  <footer class="site-footer">
+    <div class="container">
+      <p>
+        <strong>ATM DFA Simulator</strong> - Automata Theory Project
+      </p>
+      <p>
+        Built with vanilla JavaScript, HTML, and CSS. 
+        No frameworks required.
+      </p>
+      <p class="alphabet-info">
+        <strong>Alphabet (Σ):</strong> 
+        {start, enter_digit, submit_account, correct_account, wrong_account, 
+        submit_pin, correct_pin, wrong_pin, select_withdraw, select_balance, 
+        enter_amount, confirm, back, cancel, reset}
+      </p>
+      <p class="states-info">
+        <strong>States (Q):</strong> 
+        {S0 (Idle), S1 (Account Entry), S2 (PIN Entry), S3 (Authenticated), 
+        S4 (Amount Entry), S5 (Balance Display), S6 (Rejected), S7 (Done)}
+      </p>
+      <p class="tech-stack">
+        <strong>Tech Stack:</strong> 
+        <a href="https://picocss.com" target="_blank">Pico CSS</a> • 
+        <a href="https://open-props.style" target="_blank">Open Props</a> • 
+        Vanilla JavaScript
+      </p>
+    </div>
+  </footer>
 
     <script src="./js/dfa.js">
 
