@@ -160,3 +160,18 @@ function flashScreen(type) {
     screen.classList.remove(`flash-${type}`);
   }, 500);
 }
+
+//animateReset - show reset animation
+//needed for reset button
+//clears the screen and returns to idle
+
+function animateReset() {
+  const screen = document.getElementById('atm-screen');
+  if (!screen) return;
+  
+  screen.classList.add('resetting');
+  
+  setTimeout(() => {
+    screen.classList.remove('resetting');
+  }, 800);
+}
