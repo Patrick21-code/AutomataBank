@@ -386,13 +386,36 @@ function setupKeyboardShortcuts() {
       }
     }
     
+    // Backspace key
+    if (event.key === 'Backspace') {
+      event.preventDefault(); // Prevent browser back navigation
+      const backspaceBtn = document.getElementById('btn-backspace');
+      if (backspaceBtn && backspaceBtn.offsetParent !== null) {
+        backspaceBtn.click();
+      }
+    }
+    
+    // Delete key - Clear
+    if (event.key === 'Delete') {
+      const clearBtn = document.getElementById('btn-clear');
+      if (clearBtn && clearBtn.offsetParent !== null) {
+        clearBtn.click();
+      }
+    }
+    
     // Enter key
     if (event.key === 'Enter') {
-      const submitBtn = document.getElementById('btn-submit-pin');
+      const submitAccount = document.getElementById('btn-submit-account');
+      const submitPin = document.getElementById('btn-submit-pin');
+      const submitAmount = document.getElementById('btn-submit-amount');
       const confirmBtn = document.getElementById('btn-confirm');
       
-      if (submitBtn && submitBtn.style.display !== 'none') {
-        submitBtn.click();
+      if (submitAccount && submitAccount.style.display !== 'none') {
+        submitAccount.click();
+      } else if (submitPin && submitPin.style.display !== 'none') {
+        submitPin.click();
+      } else if (submitAmount && submitAmount.style.display !== 'none') {
+        submitAmount.click();
       } else if (confirmBtn && confirmBtn.style.display !== 'none') {
         confirmBtn.click();
       }
@@ -401,8 +424,12 @@ function setupKeyboardShortcuts() {
     // Escape key
     if (event.key === 'Escape') {
       const cancelBtn = document.getElementById('btn-cancel');
+      const cancelKeypadBtn = document.getElementById('btn-cancel-keypad');
+      
       if (cancelBtn && cancelBtn.style.display !== 'none') {
         cancelBtn.click();
+      } else if (cancelKeypadBtn && cancelKeypadBtn.offsetParent !== null) {
+        cancelKeypadBtn.click();
       }
     }
     

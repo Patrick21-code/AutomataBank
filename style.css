@@ -394,7 +394,7 @@ button:disabled {
 /* ── Numeric Keypad ─────────────────────────────────────── */
 .keypad {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 0.5rem;
 }
 
@@ -413,33 +413,29 @@ button:disabled {
   transition: all 0.1s ease;
 }
 
-.keypad-btn:hover {
+.keypad-btn:hover:not(.keypad-btn-empty) {
   background: linear-gradient(160deg, #f8fafc 0%, #f1f5f9 100%);
   border-color: var(--atm-primary);
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(37,99,235,0.15), inset 0 1px 0 rgba(255,255,255,0.8);
 }
 
-.keypad-btn:active {
+.keypad-btn:active:not(.keypad-btn-empty) {
   transform: translateY(1px);
   box-shadow: 0 1px 0 #e2e8f0, inset 0 2px 4px rgba(0,0,0,0.08);
 }
 
-.btn-submit {
-  grid-column: span 3;
-  aspect-ratio: auto;
-  font-size: 0.78rem;
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  color: #ffffff;
-  border-color: rgba(37,99,235,0.3);
-}
-.btn-submit:hover {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  color: #fff;
+.keypad-btn-empty {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  cursor: default;
+  pointer-events: none;
+  opacity: 0;
 }
 
 .btn-clear {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
   color: #ffffff;
   border-color: rgba(245,158,11,0.3);
@@ -449,13 +445,35 @@ button:disabled {
 }
 
 .btn-cancel-keypad {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
   color: #ffffff;
   border-color: rgba(220,38,38,0.3);
 }
 .btn-cancel-keypad:hover {
   background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.btn-backspace {
+  font-size: 1.5rem;
+  background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+  color: #ffffff;
+  border-color: rgba(100,116,139,0.3);
+}
+.btn-backspace:hover {
+  background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+}
+
+/* Submit buttons container (below keypad) */
+.submit-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 0.6rem;
+}
+
+.submit-buttons .btn-primary {
+  width: 100%;
 }
 
 /* ── Transaction Menu ───────────────────────────────────── */

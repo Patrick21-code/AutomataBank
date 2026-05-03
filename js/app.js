@@ -228,6 +228,16 @@ function handleClear() {
 }
 
 /**
+ * handleBackspace - User clicks backspace button to delete last digit
+ */
+function handleBackspace() {
+  console.log('Backspace clicked');
+  
+  // Just process the transition - the DFA will handle buffer modification
+  processTransition(INPUTS.BACKSPACE);
+}
+
+/**
  * handleCancel - User cancels transaction
  */
 function handleCancel() {
@@ -282,6 +292,12 @@ function setupEventListeners() {
   const btnClear = document.getElementById('btn-clear');
   if (btnClear) {
     btnClear.addEventListener('click', handleClear);
+  }
+  
+  // Backspace button
+  const btnBackspace = document.getElementById('btn-backspace');
+  if (btnBackspace) {
+    btnBackspace.addEventListener('click', handleBackspace);
   }
   
   // Cancel button on keypad

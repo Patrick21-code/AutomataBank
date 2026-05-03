@@ -62,20 +62,40 @@
                     Start
                 </button>
 
-                <!-- Numeric Keypad (visible at S2, S3, S5) -->
+                <!-- Numeric Keypad (visible at S1, S2, S4, S6) - 4x4 Grid -->
                 <div id="keypad" class="keypad" style="display: none;">
                     <button id="btn-digit-1" class="keypad-btn">1</button>
                     <button id="btn-digit-2" class="keypad-btn">2</button>
                     <button id="btn-digit-3" class="keypad-btn">3</button>
+                    <button id="btn-clear" class="keypad-btn btn-clear">Clear</button>
+                    
                     <button id="btn-digit-4" class="keypad-btn">4</button>
                     <button id="btn-digit-5" class="keypad-btn">5</button>
                     <button id="btn-digit-6" class="keypad-btn">6</button>
+                    <button id="btn-cancel-keypad" class="keypad-btn btn-cancel-keypad">Cancel</button>
+                    
                     <button id="btn-digit-7" class="keypad-btn">7</button>
                     <button id="btn-digit-8" class="keypad-btn">8</button>
                     <button id="btn-digit-9" class="keypad-btn">9</button>
+                    <button id="btn-backspace" class="keypad-btn btn-backspace">⌫</button>
+                    
+                    <button class="keypad-btn keypad-btn-empty"></button>
                     <button id="btn-digit-0" class="keypad-btn">0</button>
-                    <button id="btn-submit-account" class="keypad-btn btn-submit">Submit Account</button>
-                    <button id="btn-submit-pin" class="keypad-btn btn-submit">Submit PIN</button>
+                    <button class="keypad-btn keypad-btn-empty"></button>
+                    <button class="keypad-btn keypad-btn-empty"></button>
+                </div>
+                
+                <!-- Submit buttons (shown below keypad based on state) -->
+                <div class="submit-buttons">
+                    <button id="btn-submit-account" class="btn-primary" style="display: none;">
+                        Submit Account
+                    </button>
+                    <button id="btn-submit-pin" class="btn-primary" style="display: none;">
+                        Submit PIN
+                    </button>
+                    <button id="btn-submit-amount" class="btn-primary" style="display: none;">
+                        Submit Amount
+                    </button>
                 </div>
                 
                 <!-- Transaction Menu (visible at S4) -->
@@ -125,6 +145,8 @@
                 <summary>⌨️ Keyboard Shortcuts</summary>
                 <ul>
                     <li><kbd>0-9</kbd> - Enter digit</li>
+                    <li><kbd>Backspace</kbd> - Delete last digit</li>
+                    <li><kbd>Delete</kbd> - Clear all</li>
                     <li><kbd>Enter</kbd> - Submit PIN / Confirm</li>
                     <li><kbd>Esc</kbd> - Cancel</li>
                     <li><kbd>S</kbd> - Start</li>
