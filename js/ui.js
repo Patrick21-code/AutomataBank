@@ -185,3 +185,19 @@ function showLoadingSpinner(visible) {
   spinner.style.display = visible ? 'block' : 'none';
 }
 
+//Why use setTimeout to remove classes? (CSS animations need the class removed so they can play again next time)
+
+//state-based UI updates
+//updateUIForState - Show/hide elements based on current state
+//Ensures UI always matches DFA state
+
+function updateUIForState(state) {
+  // Hide everything first
+  showStartButton(false);
+  showKeypad(false);
+  showTransactionMenu(false);
+  showConfirmButtons(false);
+  showBackButton(false);
+  showResetButton(false);
+  showLoadingSpinner(false);
+}
