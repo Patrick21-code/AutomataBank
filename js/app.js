@@ -243,3 +243,76 @@ function handleRetry() {
   // Process transition (back to S1)
   processTransition(INPUTS.ENTER_DIGIT);
 }
+
+//Setup Event Listeners
+//attach handlers to all buttons
+function setupEventListeners() {
+  console.log('Setting up event listeners...');
+  
+  // Start button
+  const btnStart = document.getElementById('btn-start');
+  if (btnStart) {
+    btnStart.addEventListener('click', handleStart);
+  }
+  
+  // Digit buttons (0-9)
+  for (let i = 0; i <= 9; i++) {
+    const btnDigit = document.getElementById(`btn-digit-${i}`);
+    if (btnDigit) {
+      // Use closure to capture the digit value
+      btnDigit.addEventListener('click', () => handleDigitPress(i.toString()));
+    }
+  }
+  
+  // Submit account button
+  const btnSubmitAccount = document.getElementById('btn-submit-account');
+  if (btnSubmitAccount) {
+    btnSubmitAccount.addEventListener('click', handleSubmitAccount);
+  }
+  
+  // Submit PIN button
+  const btnSubmit = document.getElementById('btn-submit-pin');
+  if (btnSubmit) {
+    btnSubmit.addEventListener('click', handleSubmitPin);
+  }
+  
+  // Transaction buttons
+  const btnWithdraw = document.getElementById('btn-withdraw');
+  if (btnWithdraw) {
+    btnWithdraw.addEventListener('click', handleSelectWithdraw);
+  }
+  
+  const btnBalance = document.getElementById('btn-balance');
+  if (btnBalance) {
+    btnBalance.addEventListener('click', handleSelectBalance);
+  }
+  
+  // Back button
+  const btnBack = document.getElementById('btn-back');
+  if (btnBack) {
+    btnBack.addEventListener('click', handleBack);
+  }
+  
+  // Confirm/Cancel buttons
+  const btnConfirm = document.getElementById('btn-confirm');
+  if (btnConfirm) {
+    btnConfirm.addEventListener('click', handleConfirm);
+  }
+  
+  const btnCancel = document.getElementById('btn-cancel');
+  if (btnCancel) {
+    btnCancel.addEventListener('click', handleCancel);
+  }
+  
+  // Reset button
+  const btnReset = document.getElementById('btn-reset');
+  if (btnReset) {
+    btnReset.addEventListener('click', handleReset);
+  }
+  
+  // Retry button (appears after wrong account/PIN)
+  const btnRetry = document.getElementById('btn-retry');
+  if (btnRetry) {
+    btnRetry.addEventListener('click', handleRetry);
+  }
+}
