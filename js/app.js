@@ -321,6 +321,50 @@ function setupEventListeners() {
   if (btnRetry) {
     btnRetry.addEventListener('click', handleRetry);
   }
+  
+  // Diagram panel toggle
+  const diagramToggleBtn = document.getElementById('diagram-toggle-btn');
+  const diagramPanel = document.getElementById('diagram-panel');
+  const diagramOverlay = document.getElementById('diagram-overlay');
+  const btnClosePanel = document.getElementById('btn-close-panel');
+  
+  function openDiagramPanel() {
+    if (diagramPanel) diagramPanel.classList.add('open');
+    if (diagramOverlay) diagramOverlay.classList.add('visible');
+    if (diagramToggleBtn) diagramToggleBtn.classList.add('open');
+  }
+  
+  function closeDiagramPanel() {
+    if (diagramPanel) diagramPanel.classList.remove('open');
+    if (diagramOverlay) diagramOverlay.classList.remove('visible');
+    if (diagramToggleBtn) diagramToggleBtn.classList.remove('open');
+  }
+  
+  if (diagramToggleBtn) {
+    diagramToggleBtn.addEventListener('click', () => {
+      const isOpen = diagramPanel && diagramPanel.classList.contains('open');
+      if (isOpen) {
+        closeDiagramPanel();
+      } else {
+        openDiagramPanel();
+      }
+    });
+  }
+  
+  if (btnClosePanel) {
+    btnClosePanel.addEventListener('click', closeDiagramPanel);
+  }
+  
+  if (diagramOverlay) {
+    diagramOverlay.addEventListener('click', closeDiagramPanel);
+  }
+  
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && diagramPanel && diagramPanel.classList.contains('open')) {
+      closeDiagramPanel();
+    }
+  });
 }
 
 //initialization
