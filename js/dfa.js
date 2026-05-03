@@ -24,6 +24,8 @@ const STATES = {
 const INPUTS = {
     START: 'start',
     ENTER_DIGIT: 'enter_digit',
+    BACKSPACE: 'backspace',             //delete last digit
+    CLEAR: 'clear',                     //clear current input buffer
     SUBMIT_ACCOUNT: 'submit_account',
     CORRECT_ACCOUNT: 'correct_account', //internal input
     //passed
@@ -119,6 +121,14 @@ transition(input) {
                 if (this.accountBuffer.length === 5) {
                     action = 'auto_submit_account'
                 }
+            } else if (input === INPUTS.BACKSPACE) {
+                toState = STATES.S1;
+                this.accountBuffer = this.accountBuffer.slice(0, -1);
+                message = `Account: ${this.accountBuffer}`;
+            } else if (input === INPUTS.CLEAR) {
+                toState = STATES.S1;
+                this.accountBuffer = '';
+                message = 'Account cleared. Enter your 5-digit account number.';
             } else if (input === INPUTS.SUBMIT_ACCOUNT) {
                 //validate account
                 if (this.validateAccount()) {       //validateAccount function
@@ -151,6 +161,14 @@ transition(input) {
                 if (this.pinBuffer.length === 4)
                     action = 'auto_submit_pin';
 
+            } else if (input === INPUTS.BACKSPACE) {
+                toState = STATES.S2;
+                this.pinBuffer = this.pinBuffer.slice(0, -1);
+                message = 'PIN: ' + '•'.repeat(this.pinBuffer.length);
+            } else if (input === INPUTS.CLEAR) {
+                toState = STATES.S2;
+                this.pinBuffer = '';
+                message = 'PIN cleared. Enter your 4-digit PIN.';
             } else if (input === INPUTS.SUBMIT_PIN) {
                 if (this.validatePin()) {
                     toState = STATES.S3
@@ -205,6 +223,14 @@ transition(input) {
                 toState = STATES.S4     //self-loop: stay at S4 while collecting digits
                 // Note: actual digit is added by UI handler before calling transition
                 message = 'Amount: $' + this.amountBuffer
+            } else if (input === INPUTS.BACKSPACE) {
+                toState = STATES.S4;
+                this.amountBuffer = this.amountBuffer.slice(0, -1);
+                message = 'Amount: $' + this.amountBuffer;
+            } else if (input === INPUTS.CLEAR) {
+                toState = STATES.S4;
+                this.amountBuffer = '';
+                message = 'Amount cleared. Enter withdrawal amount.';
             } else if (input === INPUTS.CONFIRM) {
                 const amount = parseInt(this.amountBuffer)
                 const result = this.processWithdrawal(amount)
