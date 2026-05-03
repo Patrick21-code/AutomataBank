@@ -7,8 +7,164 @@
     <meta name="author" content="Your Name">
     <meta name="keywords" content="DFA, automata, finite state machine, ATM, simulator">
     <title>ATM DFA Simulator | Automata Theory Project</title>
+
+    <!-- Pico CSS - Classless CSS framework -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    
+    <!-- Open Props - CSS custom properties -->
+    <link rel="stylesheet" href="https://unpkg.com/open-props">
+    
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!--title and description-->
+    <header class="site-header">
+        <div class="container">
+        <h1>ATM Transaction DFA Simulator</h1>
+        <p class="subtitle">
+            A Deterministic Finite Automaton modeling ATM behavior
+        </p>
+        <p class="project-info">
+            <strong>Automata Theory Project</strong> | 
+            <span id="current-state-display">Current State: S0 (Idle)</span>
+        </p>
+        </div>
+    </header>
+
+    <!--atm smulator and state diagram-->
+    <main class="main-content">
+        <div class="container">
+        <div class="content-grid">
+            
+            <!-- LEFT COLUMN: ATM Simulator -->
+            <section class="atm-section">
+            <h2>ATM Simulator</h2>
+            
+            <!-- ATM Machine Container -->
+            <div class="atm-machine">
+                
+                <!-- Card Slot (for animation) -->
+                <div id="card-slot" class="card-slot">
+                <div class="card-slot-label">INSERT CARD</div>
+                </div>
+                
+                <!-- ATM Screen -->
+                <div id="atm-screen" class="atm-screen">
+                Welcome! Please insert your card to begin.
+                </div>
+                
+                <!-- Loading Spinner (hidden by default) -->
+                <div id="loading-spinner" class="loading-spinner" style="display: none;">
+                <div class="spinner"></div>
+                <p>Processing...</p>
+                </div>
+                
+                <!-- Button Groups -->
+                <div class="atm-controls">
+                
+                <!-- Numeric Keypad (visible at S2, S3, S5) -->
+                <div id="keypad" class="keypad" style="display: none;">
+                    <button id="btn-digit-1" class="keypad-btn">1</button>
+                    <button id="btn-digit-2" class="keypad-btn">2</button>
+                    <button id="btn-digit-3" class="keypad-btn">3</button>
+                    <button id="btn-digit-4" class="keypad-btn">4</button>
+                    <button id="btn-digit-5" class="keypad-btn">5</button>
+                    <button id="btn-digit-6" class="keypad-btn">6</button>
+                    <button id="btn-digit-7" class="keypad-btn">7</button>
+                    <button id="btn-digit-8" class="keypad-btn">8</button>
+                    <button id="btn-digit-9" class="keypad-btn">9</button>
+                    <button id="btn-digit-0" class="keypad-btn">0</button>
+                    <button id="btn-submit-account" class="keypad-btn btn-submit">Submit Account</button>
+                    <button id="btn-submit-pin" class="keypad-btn btn-submit">Submit PIN</button>
+                </div>
+                
+                <!-- Transaction Menu (visible at S4) -->
+                <div id="transaction-menu" class="transaction-menu" style="display: none;">
+                    <button id="btn-withdraw" class="btn-transaction">
+                    💵 Withdraw Money
+                    </button>
+                    <button id="btn-balance" class="btn-transaction">
+                    💳 Check Balance
+                    </button>
+                </div>
+                
+                <!-- Amount Presets (NEW in V2! - optional, visible at S5) -->
+                <div id="amount-presets" class="amount-presets" style="display: none;">
+                    <button class="preset-btn" data-amount="20">$20</button>
+                    <button class="preset-btn" data-amount="50">$50</button>
+                    <button class="preset-btn" data-amount="100">$100</button>
+                    <button class="preset-btn" data-amount="200">$200</button>
+                </div>
+                
+                <!-- Confirm/Cancel Buttons (visible at S5) -->
+                <div class="confirm-buttons">
+                    <button id="btn-confirm" class="btn-success" style="display: none;">
+                    ✓ Confirm
+                    </button>
+                    <button id="btn-cancel" class="btn-danger" style="display: none;">
+                    ✗ Cancel
+                    </button>
+                </div>
+                
+                <!-- Back Button -->
+                <button id="btn-back" class="btn-secondary" style="display: none;">
+                    ← Back to Menu
+                </button>
+                
+                <!-- Retry Button -->
+                <button id="btn-retry" class="btn-warning" style="display: none;">
+                    🔄 Retry
+                </button>
+                
+                </div>
+            </div>
+            
+            <!-- Keyboard Shortcuts Help -->
+            <div class="keyboard-shortcuts">
+                <details>
+                <summary>⌨️ Keyboard Shortcuts</summary>
+                <ul>
+                    <li><kbd>0-9</kbd> - Enter digit</li>
+                    <li><kbd>Enter</kbd> - Submit PIN / Confirm</li>
+                    <li><kbd>Esc</kbd> - Cancel</li>
+                    <li><kbd>I</kbd> - Insert card</li>
+                    <li><kbd>E</kbd> - Eject card</li>
+                </ul>
+                </details>
+            </div>
+            
+            </section>
+            
+            <!-- RIGHT COLUMN: State Diagram -->
+            <aside id="diagram-sidebar" class="diagram-sidebar visible">
+            <div class="sidebar-header">
+                <h2>State Diagram</h2>
+                <button id="btn-toggle-diagram" class="btn-small">
+                Hide Diagram
+                </button>
+            </div>
+            
+            <!-- SVG Container (diagram.js will insert SVG here) -->
+            <div id="diagram-container" class="diagram-container">
+                <!-- SVG will be inserted by JavaScript -->
+            </div>
+            
+            <!-- Diagram Legend -->
+            <div class="diagram-legend">
+                <h3>Legend</h3>
+                <ul>
+                <li><span class="legend-dot state-active"></span> Current State</li>
+                <li><span class="legend-dot state-inactive"></span> Inactive State</li>
+                <li><span class="legend-circle-double"></span> Accept State (S8)</li>
+                </ul>
+            </div>
+            </aside>
+            
+        </div>
+        </div>
+    </main>
+
+
 
     <script src="./js/dfa.js">
 
