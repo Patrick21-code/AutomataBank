@@ -164,7 +164,6 @@ function flashScreen(type) {
 //animateReset - show reset animation
 //needed for reset button
 //clears the screen and returns to idle
-
 function animateReset() {
   const screen = document.getElementById('atm-screen');
   if (!screen) return;
@@ -175,3 +174,14 @@ function animateReset() {
     screen.classList.remove('resetting');
   }, 800);
 }
+
+//showLoadingSpinner - show spinner during processing
+//for S4 (transaction) - simulating processing time
+
+function showLoadingSpinner(visible) {
+  const spinner = document.getElementById('loading-spinner');
+  if (!spinner) return;
+  
+  spinner.style.display = visible ? 'block' : 'none';
+}
+
