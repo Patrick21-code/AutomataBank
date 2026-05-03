@@ -143,3 +143,33 @@ function runTestStringWithVisualization(inputString) {
     displayResult(result.accepted, result.finalState);
   }, result.trace.length * 500);  // Wait for animation to finish
 }
+
+//animateTrace - animate each step of the trace
+
+function animateTrace(trace, index) {
+  // Base case: finished all steps
+  if (index >= trace.length) {
+    return;
+  }
+  
+  const step = trace[index];
+  
+  // Update diagram
+  highlightState(step.to);
+  animateTransition(step.from, step.to);
+  
+  // Add to log
+  addTransitionToLog(step.from, step.symbol, step.to);
+  
+  // Update screen
+  updateScreen(step.to, step.message);
+  
+  // Animate next step after delay
+  setTimeout(() => {
+    animateTrace(trace, index + 1);
+  }, 500);  // 500ms between steps
+}
+
+//DISPLAY RESULTS
+
+//dis
