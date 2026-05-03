@@ -117,3 +117,29 @@ function runTestString(inputString) {
     error: null
   };
 }
+
+//runTestStringWithVisualization
+//run test and update UI
+//this function adds UI updates unlike runTestString
+
+function runTestStringWithVisualization(inputString) {
+  // Clear previous results
+  clearTransitionLog();
+  
+  // Run the test
+  const result = runTestString(inputString);
+  
+  // Display error if any
+  if (result.error) {
+    displayError(result.error);
+    return;
+  }
+  
+  // Animate the trace step-by-step
+  animateTrace(result.trace, 0);
+  
+  // Display final result
+  setTimeout(() => {
+    displayResult(result.accepted, result.finalState);
+  }, result.trace.length * 500);  // Wait for animation to finish
+}
