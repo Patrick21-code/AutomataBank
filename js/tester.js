@@ -215,3 +215,36 @@ function displayTrace(trace) {
   table.appendChild(tbody);
   traceContainer.appendChild(table);
 }
+
+//displayResult - show ACCEPTED or REJECTED
+function displayResult(accepted, finalState) {
+  const resultContainer = document.getElementById('test-result');
+  if (!resultContainer) return;
+  
+  // Clear previous result
+  resultContainer.innerHTML = '';
+  
+  // Create result element
+  const resultDiv = document.createElement('div');
+  resultDiv.className = accepted ? 'result-accepted' : 'result-rejected';
+  
+  if (accepted) {
+    resultDiv.innerHTML = `
+      <h3>✓ ACCEPTED</h3>
+      <p>String is in the language L(M)</p>
+      <p>Final state: <strong>${finalState}</strong> (accept state)</p>
+    `;
+  } else {
+    resultDiv.innerHTML = `
+      <h3>✗ REJECTED</h3>
+      <p>String is NOT in the language L(M)</p>
+      <p>Final state: <strong>${finalState}</strong> (not an accept state)</p>
+    `;
+  }
+  
+  resultContainer.appendChild(resultDiv);
+  
+  // Flash screen for feedback
+  flashScreen(accepted ? 'success' : 'error');
+}
+
