@@ -138,3 +138,18 @@ function handleDigitPress(digit) {
   // Process the transition
   processTransition(INPUTS.ENTER_DIGIT);
 }
+
+//handleSubmitAccount
+function handleSubmitAccount() {
+  console.log('Submit account clicked');
+  
+  // Check if account has 5 digits
+  if (atmDFA.accountBuffer.length !== 5) {
+    flashScreen('error');
+    updateScreen(atmDFA.currentState, 'Account must be 5 digits');
+    return;
+  }
+  
+  // Process the transition (DFA will validate account internally)
+  processTransition(INPUTS.SUBMIT_ACCOUNT);
+}
