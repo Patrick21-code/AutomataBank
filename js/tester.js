@@ -362,3 +362,61 @@ function createTestCaseButtons() {
     container.appendChild(button);
   });
 }
+
+//initialization
+function initializeTester() {
+  console.log('Initializing string tester...');
+  
+  // Create test case buttons
+  createTestCaseButtons();
+  
+  // Set up run button
+  const runButton = document.getElementById('btn-run-test');
+  if (runButton) {
+    runButton.addEventListener('click', () => {
+      const inputField = document.getElementById('test-input');
+      if (inputField) {
+        const inputString = inputField.value;
+        runTestStringWithVisualization(inputString);
+      }
+    });
+  }
+  
+  // Set up clear button
+  const clearButton = document.getElementById('btn-clear-test');
+  if (clearButton) {
+    clearButton.addEventListener('click', () => {
+      const inputField = document.getElementById('test-input');
+      if (inputField) {
+        inputField.value = '';
+      }
+      
+      const resultContainer = document.getElementById('test-result');
+      if (resultContainer) {
+        resultContainer.innerHTML = '';
+      }
+      
+      const traceContainer = document.getElementById('trace-output');
+      if (traceContainer) {
+        traceContainer.innerHTML = '';
+      }
+      
+      clearTransitionLog();
+    });
+  }
+  
+  // Enable Enter key to run test
+  const inputField = document.getElementById('test-input');
+  if (inputField) {
+    inputField.addEventListener('keypress', (event) => {
+      if (event.key === 'Enter') {
+        runButton.click();
+      }
+    });
+  }
+  
+  // Load first test case as example
+  loadTestCase(0);
+  
+  console.log('String tester initialized successfully');
+}
