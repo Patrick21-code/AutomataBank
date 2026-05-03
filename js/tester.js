@@ -172,4 +172,46 @@ function animateTrace(trace, index) {
 
 //DISPLAY RESULTS
 
-//dis
+//displayTrace - show the complete trace in a table
+function displayTrace(trace) {
+  const traceContainer = document.getElementById('trace-output');
+  if (!traceContainer) return;
+  
+  // Clear previous trace
+  traceContainer.innerHTML = '';
+  
+  // Create table
+  const table = document.createElement('table');
+  table.className = 'trace-table';
+  
+  // Create header
+  const thead = document.createElement('thead');
+  thead.innerHTML = `
+    <tr>
+      <th>Step</th>
+      <th>From</th>
+      <th>Symbol</th>
+      <th>To</th>
+      <th>Message</th>
+    </tr>
+  `;
+  table.appendChild(thead);
+  
+  // Create body
+  const tbody = document.createElement('tbody');
+  
+  trace.forEach(step => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${step.step}</td>
+      <td class="state-cell">${step.from}</td>
+      <td class="symbol-cell">${step.symbol}</td>
+      <td class="state-cell">${step.to}</td>
+      <td class="message-cell">${step.message}</td>
+    `;
+    tbody.appendChild(row);
+  });
+  
+  table.appendChild(tbody);
+  traceContainer.appendChild(table);
+}
