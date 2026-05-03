@@ -152,20 +152,66 @@ function createTransition(from, to, label, pathType = 'straight') {
   group.setAttribute('data-from', from);
   group.setAttribute('data-to', to);
 
+  // Helper function to calculate point on circle edge
+  const STATE_RADIUS = 35;
+  function getCircleEdgePoint(fromX, fromY, toX, toY, isStart = false) {
+    const dx = toX - fromX;
+    const dy = toY - fromY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    if (distance === 0) return { x: fromX, y: fromY };
+    
+    const ratio = STATE_RADIUS / distance;
+    if (isStart) {
+      return {
+        x: fromX + dx * ratio,
+        y: fromY + dy * ratio
+      };
+    } else {
+      return {
+        x: toX - dx * ratio,
+        y: toY - dy * ratio
+      };
+    }
+  }
+
   // Calculate path based on type
   let pathData;
   let labelX, labelY;
   
   if (pathType === 'straight') {
-    // Straight line from A to B
-    pathData = `M ${fromPos.x} ${fromPos.y} L ${toPos.x} ${toPos.y}`;
-    // Label at midpoint
+    // Calculate edge points to avoid overlapping circles
+    const startPoint = getCircleEdgePoint(fromPos.x, fromPos.y, toPos.x, toPos.y, true);
+    const endPoint = getCircleEdgePoint(fromPos.x, fromPos.y, toPos.x, toPos.y, false);
+    
+    // Straight line from edge to edge
+    pathData = `M ${startPoint.x} ${startPoint.y} L ${endPoint.x} ${endPoint.y}`;
+    
+    // Label at midpoint with custom offsets for specific transitions
     labelX = (fromPos.x + toPos.x) / 2;
-    labelY = (fromPos.y + toPos.y) / 2 - 10;  // -10 to put above line
+    labelY = (fromPos.y + toPos.y) / 2 - 10;  // Default: above line
+    
+    // Custom label positions for straight paths
+    if (from === 'S0' && to === 'S1') {
+      // S0 → S1 start
+      labelY = labelY - 5;
+    } else if (from === 'S1' && to === 'S2') {
+      // S1 → S2 submit
+      labelY = labelY - 5;
+    } else if (from === 'S2' && to === 'S3') {
+      // S2 → S3 correct
+      labelY = labelY - 5;
+    } else if (from === 'S3' && to === 'S4') {
+      // S3 → S4 withdraw: shift down and right
+      labelX = labelX + 20;
+      labelY = labelY + 30;
+    } else if (from === 'S3' && to === 'S5') {
+      // S3 → S5 balance: shift down and left
+      labelX = labelX - 20;
+      labelY = labelY + 30;
+    }
   }
   else if (pathType === 'curve') {
     // Curved line (quadratic Bezier curve)
-    // Control point is above/below the midpoint
     const midX = (fromPos.x + toPos.x) / 2;
     const midY = (fromPos.y + toPos.y) / 2;
     let controlX = midX;
@@ -175,36 +221,60 @@ function createTransition(from, to, label, pathType = 'straight') {
     if (from === 'S1' && to === 'S0') {
       // S1 → S0 cancel: curve below
       controlY = midY + 60;
-      labelY = controlY + 15;
+      labelX = controlX;
+      labelY = controlY + 20;
     } else if (from === 'S2' && to === 'S6') {
       // S2 → S6 wrong PIN: curve left
       controlX = midX - 60;
       controlY = midY;
-      labelX = controlX - 15;
-      labelY = controlY;
+      labelX = controlX - 20;
+      labelY = controlY + 5;
     } else if (from === 'S4' && to === 'S7') {
       // S4 → S7 confirm: curve up to avoid S3
       controlY = midY - 80;
+      labelX = controlX + 10;
+      labelY = controlY - 5;
     } else if (from === 'S4' && to === 'S3') {
       // S4 → S3 cancel: curve down
       controlY = midY + 40;
-      labelY = controlY + 15;
+      labelX = controlX;
+      labelY = controlY + 20;
     } else if (from === 'S5' && to === 'S3') {
       // S5 → S3 back: curve down
       controlY = midY + 40;
-      labelY = controlY + 15;
+      labelX = controlX;
+      labelY = controlY + 20;
     } else if (from === 'S6' && to === 'S1') {
       // S6 → S1 new account: curve left
       controlX = midX - 40;
       controlY = midY - 20;
+      labelX = controlX - 25;
+      labelY = controlY;
     } else if (from === 'S7' && to === 'S0') {
       // S7 → S0 reset: curve up high
       controlY = fromPos.y - 100;
+      labelX = controlX;
+      labelY = controlY - 10;
     }
     
-    pathData = `M ${fromPos.x} ${fromPos.y} Q ${controlX} ${controlY} ${toPos.x} ${toPos.y}`;
-    labelX = labelX || controlX;
-    labelY = labelY || controlY - 10;
+    // Calculate approximate end point on circle edge for curves
+    // For Bezier curves, approximate the tangent at the end
+    const t = 0.95; // Use 95% of the curve to approximate direction
+    const approxEndX = (1-t)*(1-t)*fromPos.x + 2*(1-t)*t*controlX + t*t*toPos.x;
+    const approxEndY = (1-t)*(1-t)*fromPos.y + 2*(1-t)*t*controlY + t*t*toPos.y;
+    const endPoint = getCircleEdgePoint(approxEndX, approxEndY, toPos.x, toPos.y, false);
+    
+    // Similar for start point
+    const t2 = 0.05;
+    const approxStartX = (1-t2)*(1-t2)*fromPos.x + 2*(1-t2)*t2*controlX + t2*t2*toPos.x;
+    const approxStartY = (1-t2)*(1-t2)*fromPos.y + 2*(1-t2)*t2*controlY + t2*t2*toPos.y;
+    const startPoint = getCircleEdgePoint(fromPos.x, fromPos.y, approxStartX, approxStartY, true);
+    
+    pathData = `M ${startPoint.x} ${startPoint.y} Q ${controlX} ${controlY} ${endPoint.x} ${endPoint.y}`;
+    
+    // Set default label position if not customized above
+    if (!labelX) labelX = controlX;
+    if (!labelY) labelY = controlY - 10;
   }
   else if (pathType === 'arc') {
     // Semicircle arc (for return paths)
@@ -215,42 +285,66 @@ function createTransition(from, to, label, pathType = 'straight') {
     // Determine sweep direction based on specific transitions
     let sweepFlag = 1;  // Default: clockwise
     let labelOffset = 30;
+    let labelXOffset = 0;
     
     if (from === 'S2' && to === 'S0') {
       // S2 → S0 cancel: arc above
       sweepFlag = 0;  // Counter-clockwise
-      labelOffset = -30;
+      labelOffset = -35;
+      labelXOffset = 0;
     } else if (from === 'S5' && to === 'S0') {
       // S5 → S0 cancel: arc below
       sweepFlag = 1;  // Clockwise
-      labelOffset = 50;
+      labelOffset = 55;
+      labelXOffset = 0;
     } else if (from === 'S6' && to === 'S2') {
       // S6 → S2 retry: arc right
       sweepFlag = 0;  // Counter-clockwise
-      labelOffset = -20;
+      labelOffset = -25;
+      labelXOffset = 10;
     } else if (from === 'S6' && to === 'S0') {
       // S6 → S0 reset: arc below
       sweepFlag = 1;  // Clockwise
-      labelOffset = 60;
+      labelOffset = 70;
+      labelXOffset = -20;
     } else if (from === 'S3' && to === 'S0') {
       // S3 → S0 cancel: arc above
       sweepFlag = 0;  // Counter-clockwise
-      labelOffset = -40;
+      labelOffset = -45;
+      labelXOffset = 0;
     }
     
     pathData = `M ${fromPos.x} ${fromPos.y} A ${radius} ${radius} 0 0 ${sweepFlag} ${toPos.x} ${toPos.y}`;
-    labelX = (fromPos.x + toPos.x) / 2;
+    labelX = (fromPos.x + toPos.x) / 2 + labelXOffset;
     labelY = (fromPos.y + toPos.y) / 2 + labelOffset;
   }
   else if (pathType === 'loop') {
     // Self-loop (arrow that curves back to same state)
-    const loopSize = 40;
-    pathData = `M ${fromPos.x} ${fromPos.y - 35} 
-                C ${fromPos.x + loopSize} ${fromPos.y - 60}, 
-                  ${fromPos.x + loopSize} ${fromPos.y - 10}, 
-                  ${fromPos.x} ${fromPos.y - 35}`;
-    labelX = fromPos.x + loopSize + 10;
-    labelY = fromPos.y - 35;
+    const loopSize = 50;
+    
+    // Calculate start point on the circle edge (top-right)
+    const angle1 = -Math.PI / 4; // -45 degrees (top-right)
+    const startX = fromPos.x + STATE_RADIUS * Math.cos(angle1);
+    const startY = fromPos.y + STATE_RADIUS * Math.sin(angle1);
+    
+    // Calculate end point on the circle edge (top-left)
+    const angle2 = -3 * Math.PI / 4; // -135 degrees (top-left)
+    const endX = fromPos.x + STATE_RADIUS * Math.cos(angle2);
+    const endY = fromPos.y + STATE_RADIUS * Math.sin(angle2);
+    
+    // Control points for a nice loop above the state
+    const control1X = fromPos.x + loopSize;
+    const control1Y = fromPos.y - loopSize - 20;
+    const control2X = fromPos.x - loopSize;
+    const control2Y = fromPos.y - loopSize - 20;
+    
+    pathData = `M ${startX} ${startY} 
+                C ${control1X} ${control1Y}, 
+                  ${control2X} ${control2Y}, 
+                  ${endX} ${endY}`;
+    
+    labelX = fromPos.x;
+    labelY = fromPos.y - loopSize - 30;
   }
   
   // Create the path element
@@ -261,6 +355,8 @@ function createTransition(from, to, label, pathType = 'straight') {
   path.setAttribute('stroke-width', '2');
   path.setAttribute('marker-end', 'url(#arrowhead)');  // Add arrowhead
   path.classList.add('transition-path');
+  
+  console.log(`Created transition ${from} → ${to} with arrowhead`);
   
   group.appendChild(path);
   
@@ -293,22 +389,27 @@ function createStateDiagram() {
 
   // Define arrowhead marker (reusable for all arrows)
   const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+  
+  // Main arrowhead marker
   const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
   marker.id = 'arrowhead';
-  marker.setAttribute('markerWidth', '10');
-  marker.setAttribute('markerHeight', '10');
-  marker.setAttribute('refX', '9');  // Position at end of line
-  marker.setAttribute('refY', '3');
-  marker.setAttribute('orient', 'auto');  // Rotate to match line angle
+  marker.setAttribute('viewBox', '0 0 10 10');
+  marker.setAttribute('refX', '9');
+  marker.setAttribute('refY', '5');
+  marker.setAttribute('markerWidth', '6');
+  marker.setAttribute('markerHeight', '6');
+  marker.setAttribute('orient', 'auto-start-reverse');
 
   // Arrowhead shape (triangle)
   const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-  polygon.setAttribute('points', '0 0, 10 3, 0 6');
+  polygon.setAttribute('points', '0 0, 10 5, 0 10');
   polygon.setAttribute('fill', '#3b82f6');
   
   marker.appendChild(polygon);
   defs.appendChild(marker);
   svg.appendChild(defs);
+  
+  console.log('✓ Arrowhead marker created with viewBox');
 
   // Create groups for organization
   const transitionsGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');

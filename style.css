@@ -782,8 +782,18 @@ kbd {
   transition: all 0.3s ease;
 }
 
+/* Arrowhead marker styling */
+#arrowhead polygon {
+  fill: #3b82f6;
+  transition: fill 0.3s ease;
+}
+
 .transition.pulse .transition-path {
   animation: pulse 0.6s ease-in-out;
+}
+
+.transition.pulse #arrowhead polygon {
+  fill: #2563eb;
 }
 
 @keyframes pulse {
