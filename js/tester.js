@@ -26,3 +26,29 @@ function validateSymbol(symbol) {
   
   return validSymbols.includes(symbol);
 }
+
+//getSuggestion - suggest correction for invalid symbol
+function getSuggestion(invalidSymbol) {
+  const validSymbols = Object.values(INPUTS);
+  
+  // Find symbol with most matching characters
+  let bestMatch = validSymbols[0];
+  let bestScore = 0;
+  
+  validSymbols.forEach(symbol => {
+    // Count matching characters
+    let score = 0;
+    for (let i = 0; i < Math.min(symbol.length, invalidSymbol.length); i++) {
+      if (symbol[i] === invalidSymbol[i]) {
+        score++;
+      }
+    }
+    
+    if (score > bestScore) {
+      bestScore = score;
+      bestMatch = symbol;
+    }
+  });
+  
+  return bestMatch;
+}
