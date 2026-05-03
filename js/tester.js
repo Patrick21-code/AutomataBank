@@ -345,3 +345,20 @@ function loadTestCase(caseNumber) {
     `;
   }
 }
+
+function createTestCaseButtons() {
+  const container = document.getElementById('test-cases-container');
+  if (!container) return;
+  
+  TEST_CASES.forEach((testCase, index) => {
+    const button = document.createElement('button');
+    button.className = 'test-case-btn';
+    button.textContent = `Test ${index + 1}: ${testCase.name}`;
+    
+    button.addEventListener('click', () => {
+      loadTestCase(index);
+    });
+    
+    container.appendChild(button);
+  });
+}
