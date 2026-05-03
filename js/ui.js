@@ -306,5 +306,68 @@ function initializeUI() {
   console.log('UI initialized successfully');
 }
 
+//setup keyboard shortcuts
+/*
+ Shortcuts:
+ 0-9: Enter digit
+ Enter: Submit PIN / Confirm
+ Escape: Cancel
+ S: Start transaction
+ R: Reset
+*/
+
+function setupKeyboardShortcuts() {
+  document.addEventListener('keydown', (event) => {
+    // Don't interfere if user is typing in an input field
+    if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
+      return;
+    }
+    
+    // Number keys (0-9)
+    if (event.key >= '0' && event.key <= '9') {
+      const digitBtn = document.getElementById(`btn-digit-${event.key}`);
+      if (digitBtn && digitBtn.style.display !== 'none') {
+        digitBtn.click();
+      }
+    }
+    
+    // Enter key
+    if (event.key === 'Enter') {
+      const submitBtn = document.getElementById('btn-submit-pin');
+      const confirmBtn = document.getElementById('btn-confirm');
+      
+      if (submitBtn && submitBtn.style.display !== 'none') {
+        submitBtn.click();
+      } else if (confirmBtn && confirmBtn.style.display !== 'none') {
+        confirmBtn.click();
+      }
+    }
+    
+    // Escape key
+    if (event.key === 'Escape') {
+      const cancelBtn = document.getElementById('btn-cancel');
+      if (cancelBtn && cancelBtn.style.display !== 'none') {
+        cancelBtn.click();
+      }
+    }
+    
+    // S key - Start transaction
+    if (event.key.toLowerCase() === 's') {
+      const startBtn = document.getElementById('btn-start');
+      if (startBtn && startBtn.style.display !== 'none') {
+        startBtn.click();
+      }
+    }
+    
+    // R key - Reset
+    if (event.key.toLowerCase() === 'r') {
+      const resetBtn = document.getElementById('btn-reset');
+      if (resetBtn && resetBtn.style.display !== 'none') {
+        resetBtn.click();
+      }
+    }
+  });
+}
+
 
 
