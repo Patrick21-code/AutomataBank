@@ -80,3 +80,58 @@ const TRANSITIONS = [
   // Cancel paths
   { from: 'S3', to: 'S0', label: 'cancel', path: 'arc' }
 ];
+
+//create state nodes
+//draw state cirles
+function createStateNode(id, x, y, label, isAccept = false) {
+  // Create a group to hold circle + text
+  const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  group.id = `state-${id}`;
+  group.classList.add('state-node');
+
+  // Store position as data attributes (useful for drawing arrows later)
+  group.setAttribute('data-x', x);
+  group.setAttribute('data-y', y);
+
+  // Create outer circle
+  // the circle of the code
+  const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  circle.setAttribute('cx', x);
+  circle.setAttribute('cy', y);
+  circle.setAttribute('r', 35);  // Radius = 35 pixels
+  circle.classList.add('state-circle');
+
+  // If this is an accept state (S6), add inner circle for double-circle effect
+  // double circle
+  if (isAccept) {
+    const innerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    innerCircle.setAttribute('cx', x);
+    innerCircle.setAttribute('cy', y);
+    innerCircle.setAttribute('r', 30);  // Slightly smaller
+    innerCircle.classList.add('state-circle-inner');
+    group.appendChild(innerCircle);
+  }
+
+  // Add the outer circle
+  group.appendChild(circle);
+
+  // Create text label
+  const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  text.setAttribute('x', x);
+  text.setAttribute('y', y + 5);  // +5 to center vertically
+  text.setAttribute('text-anchor', 'middle');  // Center horizontally
+  text.classList.add('state-label');
+  text.textContent = label;
+  
+  group.appendChild(text);
+
+  // Add click handler (for future interactivity)
+  group.addEventListener('click', () => {
+    console.log(`Clicked state: ${id}`);
+  });
+  
+  return group;
+  
+  
+
+}
