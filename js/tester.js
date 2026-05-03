@@ -52,3 +52,68 @@ function getSuggestion(invalidSymbol) {
   
   return bestMatch;
 }
+
+//runTestString - executre a test string through the DFA
+//processes each symbol, records the trace, and lastly, determines if string is accepted
+
+function runTestString(inputString) {
+  // Parse the input
+  const symbols = parseInputString(inputString);
+  
+  if (symbols.length === 0) {
+    return {
+      accepted: false,
+      trace: [],
+      finalState: null,
+      error: 'Empty input string'
+    };
+  }
+
+  // Create a fresh DFA (start from S0)
+  const dfa = new ATM_DFA();
+  
+  // Trace will store each step: {from, symbol, to}
+  const trace = [];
+  
+  // Process each symbol
+  for (let i = 0; i < symbols.length; i++) {
+    const symbol = symbols[i];
+    
+    // Validate symbol
+    if (!validateSymbol(symbol)) {
+      const suggestion = getSuggestion(symbol);
+      return {
+        accepted: false,
+        trace: trace,
+        finalState: dfa.currentState,
+        error: `Invalid symbol: "${symbol}". Did you mean "${suggestion}"?`
+      };
+    }
+    
+    // Record state before transition
+    const fromState = dfa.currentState;
+    
+    // Execute transition
+    const result = dfa.transition(symbol);
+    
+    // Record this step in the trace
+    trace.push({
+      step: i + 1,
+      from: fromState,
+      symbol: symbol,
+      to: result.toState,
+      message: result.message
+    });
+  }
+  
+  // Check if we ended in an accept state
+  const finalState = dfa.currentState;
+  const accepted = dfa.isInAcceptState();
+  
+  return {
+    accepted: accepted,
+    trace: trace,
+    finalState: finalState,
+    error: null
+  };
+}
