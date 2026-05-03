@@ -127,3 +127,9 @@ function showStartButton(visible) {
 
 }
 
+function showBackButton(visible) {
+    const btn = document.getElementById('btn-back')
+    if (!btn) return
+
+    btn.style.display = visible ? 'block' : 'none'
+}
