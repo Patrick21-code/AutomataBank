@@ -243,4 +243,37 @@ function updateUIForState(state) {
       console.error(`Unknown state: ${state}`);
   }
 }
+
+//addTransitionToLog - add entry to the transition log
+//shows the dfa's path through states
+
+function addTransitionToLog(fromState, input, toState) {
+  const log = document.getElementById('transition-log')
+  if (!log) return;
+
+  // Create a new log entry element
+  // on the bottom
+  const entry = document.createElement('div')
+  entry.className = 'log-entry'
+
+  //create format
+  entry.innerHTML = `
+    <span class="log-from">${fromState}</span>
+    <span class="log-arrow">--[${input}]--></span>
+    <span class="log-to">${toState}</span>
+  `
+
+  // Add to log (newest at top)
+  log.insertBefore(entry, log.firstChild)
+
+  // Highlight animation
+  entry.classList.add('log-entry-new')
+  setTimeout(() => {
+    entry.classList.remove('log-entry-new')
+  }, 500);
+  
+  // Limit log to 20 entries (prevent infinite growth)
+  while (log.children.length > 20) {
+    log.removeChild(log.lastChild)
+  }
 }
