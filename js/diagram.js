@@ -322,3 +322,26 @@ function animateTransition(fromState, toState) {
     transition.classList.remove('pulse');
   }, 600);
 }
+
+//toggle sidebar
+function toggleDiagram(visible) {
+  const sidebar = document.getElementById('diagram-sidebar');
+  if (!sidebar) return;
+  
+  if (visible) {
+    sidebar.classList.add('visible');
+    sidebar.classList.remove('hidden');
+  } else {
+    sidebar.classList.add('hidden');
+    sidebar.classList.remove('visible');
+  }
+
+  // Update toggle button text
+  const toggleBtn = document.getElementById('btn-toggle-diagram');
+  if (toggleBtn) {
+    toggleBtn.textContent = visible ? 'Hide Diagram' : 'Show Diagram';
+  }
+  
+  // Save preference to localStorage
+  localStorage.setItem('diagramVisible', visible);
+}
