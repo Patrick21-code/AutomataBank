@@ -306,6 +306,12 @@ function addTransitionToLog(fromState, input, toState) {
   const log = document.getElementById('transition-log')
   if (!log) return;
 
+  // Remove placeholder message if it exists
+  const placeholder = log.querySelector('.log-empty');
+  if (placeholder) {
+    placeholder.remove();
+  }
+
   // Create a new log entry element
   // on the bottom
   const entry = document.createElement('div')
