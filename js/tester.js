@@ -319,3 +319,29 @@ const TEST_CASES = [
     description: 'Try to enter account without starting transaction. Invalid transitions, stays at S0.'
   }
 ];
+
+//load predefined test case
+function loadTestCase(caseNumber) {
+  if (caseNumber < 0 || caseNumber >= TEST_CASES.length) {
+    console.error(`Invalid test case number: ${caseNumber}`);
+    return;
+  }
+  
+  const testCase = TEST_CASES[caseNumber];
+  
+  // Fill input field
+  const inputField = document.getElementById('test-input');
+  if (inputField) {
+    inputField.value = testCase.input;
+  }
+  
+  // Show description
+  const descriptionDiv = document.getElementById('test-description');
+  if (descriptionDiv) {
+    descriptionDiv.innerHTML = `
+      <h4>${testCase.name}</h4>
+      <p>${testCase.description}</p>
+      <p><em>Expected: ${testCase.expectedResult.toUpperCase()}</em></p>
+    `;
+  }
+}
