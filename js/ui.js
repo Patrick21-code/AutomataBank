@@ -369,5 +369,30 @@ function setupKeyboardShortcuts() {
   });
 }
 
+//setupAccessibility - for screen readers
+//for better UXX
+
+function setupAccessibility() {
+  // Add ARIA label to screen
+  const screen = document.getElementById('atm-screen');
+  if (screen) {
+    screen.setAttribute('role', 'status');
+    screen.setAttribute('aria-live', 'polite');
+    screen.setAttribute('aria-atomic', 'true');
+  }
+  
+  // Add ARIA labels to button groups
+  const keypad = document.getElementById('keypad');
+  if (keypad) {
+    keypad.setAttribute('role', 'group');
+    keypad.setAttribute('aria-label', 'Numeric keypad');
+  }
+  
+  const transactionMenu = document.getElementById('transaction-menu');
+  if (transactionMenu) {
+    transactionMenu.setAttribute('role', 'menu');
+    transactionMenu.setAttribute('aria-label', 'Transaction options');
+  }
+}
 
 
