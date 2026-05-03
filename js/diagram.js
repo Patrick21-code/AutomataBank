@@ -342,24 +342,11 @@ function animateTransition(fromStateValue, toStateValue) {
   }, 600);
 }
 
-//toggle sidebar
+//toggle diagram panel (no longer needed, kept for compatibility)
 function toggleDiagram(visible) {
-  const sidebar = document.getElementById('diagram-sidebar');
-  if (!sidebar) return;
-  
-  if (visible) {
-    sidebar.classList.add('visible');
-    sidebar.classList.remove('hidden');
-  } else {
-    sidebar.classList.add('hidden');
-    sidebar.classList.remove('visible');
-  }
-
-  // Update toggle button text
-  const toggleBtn = document.getElementById('btn-toggle-diagram');
-  if (toggleBtn) {
-    toggleBtn.textContent = visible ? 'Hide Diagram' : 'Show Diagram';
-  }
+  // This function is kept for backward compatibility
+  // Panel is now controlled by hamburger button in app.js
+  console.log('toggleDiagram called:', visible);
 }
 
 //initialization
@@ -380,20 +367,6 @@ function initializeDiagram() {
   
   // Highlight initial state
   highlightState('S0');
-  
-  // Set up toggle button
-  const toggleBtn = document.getElementById('btn-toggle-diagram');
-  if (toggleBtn) {
-    toggleBtn.addEventListener('click', () => {
-      const sidebar = document.getElementById('diagram-sidebar');
-      const isVisible = sidebar.classList.contains('visible');
-      toggleDiagram(!isVisible);
-    });
-  }
-
-  // Default: visible on desktop, hidden on mobile
-  const isMobile = window.innerWidth < 768;
-  toggleDiagram(!isMobile);
   
   console.log('Diagram initialized successfully');
 }
