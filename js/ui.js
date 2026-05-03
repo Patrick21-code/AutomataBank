@@ -30,6 +30,29 @@ function updateScreen(state, message) {
     setTimeout(() => {
         screen.classList.remove('screen-update')
     }, 300)
+    
+    // Update current state display in header
+    updateCurrentStateDisplay(state);
+}
+
+// Update the current state display in the header
+function updateCurrentStateDisplay(state) {
+    const stateDisplay = document.getElementById('current-state-display');
+    if (!stateDisplay) return;
+    
+    const stateLabels = {
+        'idle': 'S0 (Idle)',
+        'account_entry': 'S1 (Account Entry)',
+        'pin_entry': 'S2 (PIN Entry)',
+        'authenticated': 'S3 (Authenticated)',
+        'amount_entry': 'S4 (Amount Entry)',
+        'balance_display': 'S5 (Balance Display)',
+        'rejected': 'S6 (Rejected)',
+        'done': 'S7 (Done)'
+    };
+    
+    const label = stateLabels[state] || state;
+    stateDisplay.textContent = `Current State: ${label}`;
 }
 
 //displayPinMask - show pin as dots for security
@@ -203,39 +226,39 @@ function updateUIForState(state) {
 
   // Now show only what's needed for this state
   switch (state) {
-    case 'S0':  // Idle
+    case 'idle':  // S0 - Idle
       showStartButton(true);
       break;
       
-    case 'S1':  // Account entry
+    case 'account_entry':  // S1 - Account entry
       showKeypad(true);
       break;
       
-    case 'S2':  // PIN entry
+    case 'pin_entry':  // S2 - PIN entry
       showKeypad(true);
       // Also show submit PIN button
       break;
       
-    case 'S3':  // Authenticated
+    case 'authenticated':  // S3 - Authenticated
       showTransactionMenu(true);
       break;
       
-    case 'S4':  // Amount entry
+    case 'amount_entry':  // S4 - Amount entry
       showKeypad(true);
       showConfirmButtons(true);
       break;
       
-    case 'S5':  // Balance display
+    case 'balance_display':  // S5 - Balance display
       showBackButton(true);
       showResetButton(true);
       break;
       
-    case 'S6':  // Rejected
+    case 'rejected':  // S6 - Rejected
       showKeypad(true);  // For retry
       showResetButton(true);  // Or give up
       break;
       
-    case 'S7':  // Done
+    case 'done':  // S7 - Done
       showResetButton(true);
       break;
       
@@ -294,8 +317,8 @@ function initializeUI() {
   console.log('Initializing UI...');
   
   // Set initial UI state (should match DFA's S0)
-  updateUIForState('S0');
-  updateScreen('S0', 'Welcome! Press START to begin transaction.');
+  updateUIForState('idle');
+  updateScreen('idle', 'Welcome! Press START to begin transaction.');
   
   // Set up keyboard shortcuts
   setupKeyboardShortcuts();
