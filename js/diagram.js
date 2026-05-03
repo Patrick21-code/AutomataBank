@@ -216,3 +216,64 @@ function createTransition(from, to, label, pathType = 'straight') {
   
   return group;
 }
+
+
+//create the complete diagram
+//build the entire svg diagram
+//assembles everything
+function createStateDiagram() {
+  // Create SVG element
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('width', '100%');
+  svg.setAttribute('height', '100%');
+  svg.setAttribute('viewBox', '0 0 1000 600');  // Coordinate system
+  svg.id = 'state-diagram';
+
+  // Define arrowhead marker (reusable for all arrows)
+  const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+  const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+  marker.id = 'arrowhead';
+  marker.setAttribute('markerWidth', '10');
+  marker.setAttribute('markerHeight', '10');
+  marker.setAttribute('refX', '9');  // Position at end of line
+  marker.setAttribute('refY', '3');
+  marker.setAttribute('orient', 'auto');  // Rotate to match line angle
+
+  // Arrowhead shape (triangle)
+  const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+  polygon.setAttribute('points', '0 0, 10 3, 0 6');
+  polygon.setAttribute('fill', '#3b82f6');
+  
+  marker.appendChild(polygon);
+  defs.appendChild(marker);
+  svg.appendChild(defs);
+
+  // Create groups for organization
+  const transitionsGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  transitionsGroup.id = 'transitions';
+  
+  const statesGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  statesGroup.id = 'states';
+  
+  // Add all transitions first (so they appear behind states)
+  TRANSITIONS.forEach(trans => {
+    const transitionElement = createTransition(trans.from, trans.to, trans.label, trans.path);
+    if (transitionElement) {
+      transitionsGroup.appendChild(transitionElement);
+    }
+  });
+
+  // Add all states
+  Object.keys(STATE_POSITIONS).forEach(stateId => {
+    const pos = STATE_POSITIONS[stateId];
+    const isAccept = (stateId === 'S7');  // Only S7 is accept state
+    const stateNode = createStateNode(stateId, pos.x, pos.y, pos.label, isAccept);
+    statesGroup.appendChild(stateNode);
+  });
+  
+  // Add groups to SVG (order for layering)
+  svg.appendChild(transitionsGroup);
+  svg.appendChild(statesGroup);
+  
+  return svg;
+}
