@@ -168,19 +168,79 @@ function createTransition(from, to, label, pathType = 'straight') {
     // Control point is above/below the midpoint
     const midX = (fromPos.x + toPos.x) / 2;
     const midY = (fromPos.y + toPos.y) / 2;
-    const controlX = midX;
-    const controlY = midY - 50;  // Curve upward
+    let controlX = midX;
+    let controlY = midY - 50;  // Default: curve upward
+    
+    // Custom control points for specific transitions to avoid overlaps
+    if (from === 'S1' && to === 'S0') {
+      // S1 → S0 cancel: curve below
+      controlY = midY + 60;
+      labelY = controlY + 15;
+    } else if (from === 'S2' && to === 'S6') {
+      // S2 → S6 wrong PIN: curve left
+      controlX = midX - 60;
+      controlY = midY;
+      labelX = controlX - 15;
+      labelY = controlY;
+    } else if (from === 'S4' && to === 'S7') {
+      // S4 → S7 confirm: curve up to avoid S3
+      controlY = midY - 80;
+    } else if (from === 'S4' && to === 'S3') {
+      // S4 → S3 cancel: curve down
+      controlY = midY + 40;
+      labelY = controlY + 15;
+    } else if (from === 'S5' && to === 'S3') {
+      // S5 → S3 back: curve down
+      controlY = midY + 40;
+      labelY = controlY + 15;
+    } else if (from === 'S6' && to === 'S1') {
+      // S6 → S1 new account: curve left
+      controlX = midX - 40;
+      controlY = midY - 20;
+    } else if (from === 'S7' && to === 'S0') {
+      // S7 → S0 reset: curve up high
+      controlY = fromPos.y - 100;
+    }
     
     pathData = `M ${fromPos.x} ${fromPos.y} Q ${controlX} ${controlY} ${toPos.x} ${toPos.y}`;
-    labelX = controlX;
-    labelY = controlY - 10;
+    labelX = labelX || controlX;
+    labelY = labelY || controlY - 10;
   }
   else if (pathType === 'arc') {
-    // Semicircle arc (for return paths like S5 → S1)
-    const radius = Math.abs(toPos.x - fromPos.x) / 2;
-    pathData = `M ${fromPos.x} ${fromPos.y} A ${radius} ${radius} 0 0 1 ${toPos.x} ${toPos.y}`;
+    // Semicircle arc (for return paths)
+    const dx = toPos.x - fromPos.x;
+    const dy = toPos.y - fromPos.y;
+    const radius = Math.sqrt(dx * dx + dy * dy) / 2;
+    
+    // Determine sweep direction based on specific transitions
+    let sweepFlag = 1;  // Default: clockwise
+    let labelOffset = 30;
+    
+    if (from === 'S2' && to === 'S0') {
+      // S2 → S0 cancel: arc above
+      sweepFlag = 0;  // Counter-clockwise
+      labelOffset = -30;
+    } else if (from === 'S5' && to === 'S0') {
+      // S5 → S0 cancel: arc below
+      sweepFlag = 1;  // Clockwise
+      labelOffset = 50;
+    } else if (from === 'S6' && to === 'S2') {
+      // S6 → S2 retry: arc right
+      sweepFlag = 0;  // Counter-clockwise
+      labelOffset = -20;
+    } else if (from === 'S6' && to === 'S0') {
+      // S6 → S0 reset: arc below
+      sweepFlag = 1;  // Clockwise
+      labelOffset = 60;
+    } else if (from === 'S3' && to === 'S0') {
+      // S3 → S0 cancel: arc above
+      sweepFlag = 0;  // Counter-clockwise
+      labelOffset = -40;
+    }
+    
+    pathData = `M ${fromPos.x} ${fromPos.y} A ${radius} ${radius} 0 0 ${sweepFlag} ${toPos.x} ${toPos.y}`;
     labelX = (fromPos.x + toPos.x) / 2;
-    labelY = fromPos.y + 30;  // Below the arc
+    labelY = (fromPos.y + toPos.y) / 2 + labelOffset;
   }
   else if (pathType === 'loop') {
     // Self-loop (arrow that curves back to same state)
