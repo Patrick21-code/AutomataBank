@@ -106,8 +106,8 @@ function showTransactionMenu(visible) {
 
 //show/hide confirm/cancel buttons
 function showConfirmButtons(visible) {
-    const confirmBtn = document.getElementById()
-    const cancelBtn = document.getElementById()
+    const confirmBtn = document.getElementById('btn-confirm')
+    const cancelBtn = document.getElementById('btn-cancel')
 
     if (confirmBtn) confirmBtn.style.display = visible ? 'block' : 'none'
     if (cancelBtn) cancelBtn.style.display = visible ? 'block' : 'none'
