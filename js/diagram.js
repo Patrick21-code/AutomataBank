@@ -131,7 +131,88 @@ function createStateNode(id, x, y, label, isAccept = false) {
   });
   
   return group;
-  
-  
+}
 
+//create transition arrows
+function createTransition(from, to, label, pathType = 'straight') {
+  // Get positions of start and end states
+  const fromPos = STATE_POSITIONS[from];
+  const toPos = STATE_POSITIONS[to];
+
+  if (!fromPos || !toPos) {
+    console.error(`Invalid transition: ${from} -> ${to}`);
+    return null;
+  }
+
+  // Create group for arrow + label
+  const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  group.classList.add('transition');
+  group.setAttribute('data-from', from);
+  group.setAttribute('data-to', to);
+
+  // Calculate path based on type
+  let pathData;
+  let labelX, labelY;
+  
+  if (pathType === 'straight') {
+    // Straight line from A to B
+    pathData = `M ${fromPos.x} ${fromPos.y} L ${toPos.x} ${toPos.y}`;
+    // Label at midpoint
+    labelX = (fromPos.x + toPos.x) / 2;
+    labelY = (fromPos.y + toPos.y) / 2 - 10;  // -10 to put above line
+  }
+  else if (pathType === 'curve') {
+    // Curved line (quadratic Bezier curve)
+    // Control point is above/below the midpoint
+    const midX = (fromPos.x + toPos.x) / 2;
+    const midY = (fromPos.y + toPos.y) / 2;
+    const controlX = midX;
+    const controlY = midY - 50;  // Curve upward
+    
+    pathData = `M ${fromPos.x} ${fromPos.y} Q ${controlX} ${controlY} ${toPos.x} ${toPos.y}`;
+    labelX = controlX;
+    labelY = controlY - 10;
+  }
+  else if (pathType === 'arc') {
+    // Semicircle arc (for return paths like S5 → S1)
+    const radius = Math.abs(toPos.x - fromPos.x) / 2;
+    pathData = `M ${fromPos.x} ${fromPos.y} A ${radius} ${radius} 0 0 1 ${toPos.x} ${toPos.y}`;
+    labelX = (fromPos.x + toPos.x) / 2;
+    labelY = fromPos.y + 30;  // Below the arc
+  }
+  else if (pathType === 'loop') {
+    // Self-loop (arrow that curves back to same state)
+    const loopSize = 40;
+    pathData = `M ${fromPos.x} ${fromPos.y - 35} 
+                C ${fromPos.x + loopSize} ${fromPos.y - 60}, 
+                  ${fromPos.x + loopSize} ${fromPos.y - 10}, 
+                  ${fromPos.x} ${fromPos.y - 35}`;
+    labelX = fromPos.x + loopSize + 10;
+    labelY = fromPos.y - 35;
+  }
+  
+  // Create the path element
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  path.setAttribute('d', pathData);
+  path.setAttribute('fill', 'none');
+  path.setAttribute('stroke', '#3b82f6');  // Blue
+  path.setAttribute('stroke-width', '2');
+  path.setAttribute('marker-end', 'url(#arrowhead)');  // Add arrowhead
+  path.classList.add('transition-path');
+  
+  group.appendChild(path);
+  
+  // Create label
+  const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  text.setAttribute('x', labelX);
+  text.setAttribute('y', labelY);
+  text.setAttribute('text-anchor', 'middle');
+  text.setAttribute('fill', '#1e40af');  // Darker blue
+  text.setAttribute('font-size', '12');
+  text.classList.add('transition-label');
+  text.textContent = label;
+  
+  group.appendChild(text);
+  
+  return group;
 }
