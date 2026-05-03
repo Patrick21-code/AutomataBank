@@ -250,7 +250,6 @@ function updateUIForState(state) {
     case 'amount_entry':  // S4 - Amount entry
       showKeypad(true);
       showSubmitButton('amount');
-      showConfirmButtons(true);
       break;
       
     case 'balance_display':  // S5 - Balance display
