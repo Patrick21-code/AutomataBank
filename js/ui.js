@@ -339,6 +339,19 @@ function clearTransitionLog() {
   if (!log) return;
   
   log.innerHTML = '';
+  
+  // Add appropriate placeholder message based on current state
+  // Access the global atmDFA if available
+  if (typeof atmDFA !== 'undefined' && atmDFA) {
+    if (atmDFA.currentState === 'idle') {
+      log.innerHTML = '<p class="log-empty">No transitions yet. Start by pressing START.</p>';
+    } else {
+      log.innerHTML = '<p class="log-empty">Transition log cleared.</p>';
+    }
+  } else {
+    // Fallback if DFA not initialized yet
+    log.innerHTML = '<p class="log-empty">No transitions yet. Start by pressing START.</p>';
+  }
 }
 
 //initializiation
