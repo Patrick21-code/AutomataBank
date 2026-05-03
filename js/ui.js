@@ -264,6 +264,7 @@ function addTransitionToLog(fromState, input, toState) {
   `
 
   // Add to log (newest at top)
+  //newest entries at top - easier to read
   log.insertBefore(entry, log.firstChild)
 
   // Highlight animation
@@ -284,4 +285,26 @@ function clearTransitionLog() {
   
   log.innerHTML = '';
 }
+
+//initializiation
+//set up the UI on page load
+//called once when page loads (from app.js)
+
+function initializeUI() {
+  console.log('Initializing UI...');
+  
+  // Set initial UI state (should match DFA's S0)
+  updateUIForState('S0');
+  updateScreen('S0', 'Welcome! Press START to begin transaction.');
+  
+  // Set up keyboard shortcuts
+  setupKeyboardShortcuts();
+  
+  // Add accessibility attributes
+  setupAccessibility();
+  
+  console.log('UI initialized successfully');
+}
+
+
 
