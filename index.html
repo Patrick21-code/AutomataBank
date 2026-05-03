@@ -43,14 +43,9 @@
             <!-- ATM Machine Container -->
             <div class="atm-machine">
                 
-                <!-- Card Slot (for animation) -->
-                <div id="card-slot" class="card-slot">
-                <div class="card-slot-label">INSERT CARD</div>
-                </div>
-                
                 <!-- ATM Screen -->
                 <div id="atm-screen" class="atm-screen">
-                Welcome! Please insert your card to begin.
+                Welcome! Please START your card to begin.
                 </div>
                 
                 <!-- Loading Spinner (hidden by default) -->
@@ -62,6 +57,11 @@
                 <!-- Button Groups -->
                 <div class="atm-controls">
                 
+                <!-- Start Button (visible at S0) -->
+                <button id="btn-start" class="btn-primary btn-large">
+                    Start
+                </button>
+
                 <!-- Numeric Keypad (visible at S2, S3, S5) -->
                 <div id="keypad" class="keypad" style="display: none;">
                     <button id="btn-digit-1" class="keypad-btn">1</button>
@@ -111,9 +111,9 @@
                     ← Back to Menu
                 </button>
                 
-                <!-- Retry Button -->
-                <button id="btn-retry" class="btn-warning" style="display: none;">
-                    🔄 Retry
+                <!-- Reset Button (visible at S7) -->
+                <button id="btn-reset" class="btn-secondary" style="display: none;">
+                    🔄 Reset
                 </button>
                 
                 </div>
@@ -127,8 +127,8 @@
                     <li><kbd>0-9</kbd> - Enter digit</li>
                     <li><kbd>Enter</kbd> - Submit PIN / Confirm</li>
                     <li><kbd>Esc</kbd> - Cancel</li>
-                    <li><kbd>I</kbd> - Insert card</li>
-                    <li><kbd>E</kbd> - Eject card</li>
+                    <li><kbd>I</kbd> - Start</li>
+                    <li><kbd>E</kbd> - Reset</li>
                 </ul>
                 </details>
             </div>
@@ -155,7 +155,7 @@
                 <ul>
                 <li><span class="legend-dot state-active"></span> Current State</li>
                 <li><span class="legend-dot state-inactive"></span> Inactive State</li>
-                <li><span class="legend-circle-double"></span> Accept State (S8)</li>
+                <li><span class="legend-circle-double"></span> Accept State (S7)</li>
                 </ul>
             </div>
             </aside>
@@ -164,6 +164,81 @@
         </div>
     </main>
 
+    <!--string tester-->
+    <section class="tester-section">
+        <div class="container">
+        <h2>String Input Tester</h2>
+        <p class="section-description">
+            Test if a string is accepted by the DFA. Enter space-separated symbols from the alphabet.
+        </p>
+        
+        <!-- Test Input Area -->
+        <div class="tester-input-area">
+            <label for="test-input">
+            Input String (space-separated symbols):
+            </label>
+            <textarea 
+            id="test-input" 
+            rows="3" 
+            placeholder="Example: start enter_digit enter_digit enter_digit enter_digit enter_digit submit_account enter_digit enter_digit enter_digit enter_digit submit_pin select_withdraw enter_amount enter_amount enter_amount confirm reset"
+            ></textarea>
+            
+            <div class="tester-buttons">
+            <button id="btn-run-test" class="btn-primary">
+                ▶ Run Test
+            </button>
+            <button id="btn-clear-test" class="btn-secondary">
+                Clear
+            </button>
+            </div>
+        </div>
+        
+        <!-- Predefined Test Cases -->
+        <div class="test-cases">
+            <h3>Predefined Test Cases</h3>
+            <p class="help-text">Click a test case to load it:</p>
+            <div id="test-cases-container" class="test-cases-grid">
+            <!-- Buttons will be inserted by JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Test Description (shows when test case is loaded) -->
+        <div id="test-description" class="test-description">
+            <!-- Description will be inserted by JavaScript -->
+        </div>
+        
+        <!-- Test Result -->
+        <div id="test-result" class="test-result">
+            <!-- Result will be inserted by JavaScript -->
+        </div>
+        
+        <!-- Execution Trace -->
+        <div class="trace-section">
+            <h3>Execution Trace</h3>
+            <div id="trace-output" class="trace-output">
+            <!-- Trace table will be inserted by JavaScript -->
+            </div>
+        </div>
+        
+        </div>
+    </section>
+
+    <!--transition log-->
+    <section class="log-section">
+        <div class="container">
+        <div class="log-header">
+            <h2>Transition Log</h2>
+            <button id="btn-clear-log" class="btn-small">
+            Clear Log
+            </button>
+        </div>
+        
+        <div id="transition-log" class="transition-log">
+            <!-- Log entries will be inserted by JavaScript -->
+            <p class="log-empty">No transitions yet. Start by inserting a card.</p>
+        </div>
+        </div>
+    </section>
 
 
     <script src="./js/dfa.js">
