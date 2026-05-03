@@ -223,6 +223,9 @@ function updateUIForState(state) {
   showBackButton(false);
   showResetButton(false);
   showLoadingSpinner(false);
+  
+  // Hide all submit buttons initially
+  hideAllSubmitButtons();
 
   // Now show only what's needed for this state
   switch (state) {
@@ -232,11 +235,12 @@ function updateUIForState(state) {
       
     case 'account_entry':  // S1 - Account entry
       showKeypad(true);
+      showSubmitButton('account');
       break;
       
     case 'pin_entry':  // S2 - PIN entry
       showKeypad(true);
-      // Also show submit PIN button
+      showSubmitButton('pin');
       break;
       
     case 'authenticated':  // S3 - Authenticated
@@ -245,6 +249,7 @@ function updateUIForState(state) {
       
     case 'amount_entry':  // S4 - Amount entry
       showKeypad(true);
+      showSubmitButton('amount');
       showConfirmButtons(true);
       break;
       
@@ -255,6 +260,7 @@ function updateUIForState(state) {
       
     case 'rejected':  // S6 - Rejected
       showKeypad(true);  // For retry
+      showSubmitButton('pin');
       showResetButton(true);  // Or give up
       break;
       
@@ -264,6 +270,32 @@ function updateUIForState(state) {
       
     default:
       console.error(`Unknown state: ${state}`);
+  }
+}
+
+// Helper function to hide all submit buttons
+function hideAllSubmitButtons() {
+  const submitAccount = document.getElementById('btn-submit-account');
+  const submitPin = document.getElementById('btn-submit-pin');
+  const submitAmount = document.getElementById('btn-submit-amount');
+  
+  if (submitAccount) submitAccount.style.display = 'none';
+  if (submitPin) submitPin.style.display = 'none';
+  if (submitAmount) submitAmount.style.display = 'none';
+}
+
+// Helper function to show specific submit button
+function showSubmitButton(type) {
+  const submitAccount = document.getElementById('btn-submit-account');
+  const submitPin = document.getElementById('btn-submit-pin');
+  const submitAmount = document.getElementById('btn-submit-amount');
+  
+  if (type === 'account' && submitAccount) {
+    submitAccount.style.display = 'block';
+  } else if (type === 'pin' && submitPin) {
+    submitPin.style.display = 'block';
+  } else if (type === 'amount' && submitAmount) {
+    submitAmount.style.display = 'block';
   }
 }
 

@@ -220,6 +220,14 @@ function handleConfirm() {
 }
 
 /**
+ * handleClear - User clicks clear button to clear current input buffer
+ */
+function handleClear() {
+  console.log('Clear clicked');
+  processTransition(INPUTS.CLEAR);
+}
+
+/**
  * handleCancel - User cancels transaction
  */
 function handleCancel() {
@@ -270,6 +278,18 @@ function setupEventListeners() {
     }
   }
   
+  // Clear button
+  const btnClear = document.getElementById('btn-clear');
+  if (btnClear) {
+    btnClear.addEventListener('click', handleClear);
+  }
+  
+  // Cancel button on keypad
+  const btnCancelKeypad = document.getElementById('btn-cancel-keypad');
+  if (btnCancelKeypad) {
+    btnCancelKeypad.addEventListener('click', handleCancel);
+  }
+  
   // Submit account button
   const btnSubmitAccount = document.getElementById('btn-submit-account');
   if (btnSubmitAccount) {
@@ -280,6 +300,12 @@ function setupEventListeners() {
   const btnSubmit = document.getElementById('btn-submit-pin');
   if (btnSubmit) {
     btnSubmit.addEventListener('click', handleSubmitPin);
+  }
+  
+  // Submit amount button
+  const btnSubmitAmount = document.getElementById('btn-submit-amount');
+  if (btnSubmitAmount) {
+    btnSubmitAmount.addEventListener('click', handleConfirm);
   }
   
   // Transaction buttons
