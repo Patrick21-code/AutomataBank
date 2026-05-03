@@ -153,3 +153,93 @@ function handleSubmitAccount() {
   // Process the transition (DFA will validate account internally)
   processTransition(INPUTS.SUBMIT_ACCOUNT);
 }
+
+//handleSubmitPin
+function handleSubmitPin() {
+  console.log('Submit PIN clicked');
+  
+  // Check if PIN has 4 digits
+  if (atmDFA.pinBuffer.length !== 4) {
+    flashScreen('error');
+    updateScreen(atmDFA.currentState, 'PIN must be 4 digits');
+    return;
+  }
+  
+  // Process the transition (DFA will validate PIN internally)
+  processTransition(INPUTS.SUBMIT_PIN);
+}
+
+/**
+ * handleSelectWithdraw - User chooses to withdraw money
+ */
+function handleSelectWithdraw() {
+  console.log('Withdraw selected');
+  processTransition(INPUTS.SELECT_WITHDRAW);
+}
+
+/**
+ * handleSelectBalance - User chooses to check balance
+ */
+function handleSelectBalance() {
+  console.log('Balance selected');
+  processTransition(INPUTS.SELECT_BALANCE);
+}
+
+/**
+ * handleBack - User clicks back button from balance display
+ */
+function handleBack() {
+  console.log('Back clicked');
+  processTransition(INPUTS.BACK);
+}
+
+/**
+ * handleEnterAmount - User enters withdrawal amount digit
+ * 
+ * @param {string} digit - The digit pressed
+ */
+function handleEnterAmount(digit) {
+  console.log(`Amount digit entered: ${digit}`);
+  atmDFA.amountBuffer += digit;
+  updateAmountDisplay(atmDFA.amountBuffer);
+  processTransition(INPUTS.ENTER_AMOUNT);
+}
+
+/**
+ * handleConfirm - User confirms transaction
+ */
+function handleConfirm() {
+  console.log('Confirm clicked');
+  processTransition(INPUTS.CONFIRM);
+}
+
+/**
+ * handleCancel - User cancels transaction
+ */
+function handleCancel() {
+  console.log('Cancel clicked');
+  processTransition(INPUTS.CANCEL);
+}
+
+/**
+ * handleReset - User resets the ATM
+ */
+function handleReset() {
+  console.log('Reset clicked');
+  processTransition(INPUTS.RESET);
+}
+
+/**
+ * handleRetry - User retries after wrong account/PIN
+ */
+function handleRetry() {
+  console.log('Retry clicked');
+  
+  // Clear all buffers
+  atmDFA.accountBuffer = '';
+  atmDFA.pinBuffer = '';
+  atmDFA.amountBuffer = '';
+  
+  // Process transition (back to S1)
+  processTransition(INPUTS.ENTER_DIGIT);
+}
