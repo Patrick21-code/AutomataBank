@@ -133,3 +133,10 @@ function showBackButton(visible) {
 
     btn.style.display = visible ? 'block' : 'none'
 }
+
+function showResetButton(visible) {
+  const btn = document.getElementById('btn-reset');
+  if (!btn) return;
+  
+  btn.style.display = visible ? 'block' : 'none';
+}
