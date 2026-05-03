@@ -200,4 +200,47 @@ function updateUIForState(state) {
   showBackButton(false);
   showResetButton(false);
   showLoadingSpinner(false);
+
+  // Now show only what's needed for this state
+  switch (state) {
+    case 'S0':  // Idle
+      showStartButton(true);
+      break;
+      
+    case 'S1':  // Account entry
+      showKeypad(true);
+      break;
+      
+    case 'S2':  // PIN entry
+      showKeypad(true);
+      // Also show submit PIN button
+      break;
+      
+    case 'S3':  // Authenticated
+      showTransactionMenu(true);
+      break;
+      
+    case 'S4':  // Amount entry
+      showKeypad(true);
+      showConfirmButtons(true);
+      break;
+      
+    case 'S5':  // Balance display
+      showBackButton(true);
+      showResetButton(true);
+      break;
+      
+    case 'S6':  // Rejected
+      showKeypad(true);  // For retry
+      showResetButton(true);  // Or give up
+      break;
+      
+    case 'S7':  // Done
+      showResetButton(true);
+      break;
+      
+    default:
+      console.error(`Unknown state: ${state}`);
+  }
+}
 }
