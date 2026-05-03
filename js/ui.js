@@ -277,3 +277,11 @@ function addTransitionToLog(fromState, input, toState) {
     log.removeChild(log.lastChild)
   }
 }
+
+function clearTransitionLog() {
+  const log = document.getElementById('transition-log');
+  if (!log) return;
+  
+  log.innerHTML = '';
+}
+
