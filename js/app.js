@@ -111,3 +111,30 @@ function handleAction(action) {
       console.log(`Unknown action: ${action}`);
   }
 }
+
+//handleDigitPress
+function handleDigitPress(digit) {
+  console.log(`Digit pressed: ${digit}`);
+  
+  // Determine which buffer to update based on current state
+  const state = atmDFA.currentState;
+  
+  if (state === STATES.S1) {
+    // Account entry - show in plain text
+    atmDFA.accountBuffer += digit;
+    updateScreen(atmDFA.currentState, `Account: ${atmDFA.accountBuffer}`);
+  } 
+  else if (state === STATES.S2) {
+    // PIN entry
+    atmDFA.pinBuffer += digit;
+    updatePinDisplay(atmDFA.pinBuffer.length);
+  }
+  else if (state === STATES.S4) {
+    // Amount entry
+    atmDFA.amountBuffer += digit;
+    updateAmountDisplay(atmDFA.amountBuffer);
+  }
+  
+  // Process the transition
+  processTransition(INPUTS.ENTER_DIGIT);
+}
