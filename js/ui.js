@@ -139,4 +139,24 @@ function showResetButton(visible) {
   if (!btn) return;
   
   btn.style.display = visible ? 'block' : 'none';
+  //why we use display instead of visibility?
+  //display: none removes from layout, visibility: hidden
+}
+
+//flashScreen - flash the screen for feedback
+//greenflash when PIN correct
+//red flash when PIN wrong
+//blue flash for neutral messages
+
+function flashScreen(type) {
+  const screen = document.getElementById('atm-screen');
+  if (!screen) return;
+  
+  // Add flash class
+  screen.classList.add(`flash-${type}`);
+  
+  // Remove after animation completes
+  setTimeout(() => {
+    screen.classList.remove(`flash-${type}`);
+  }, 500);
 }
