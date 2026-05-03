@@ -316,3 +316,57 @@ function setupEventListeners() {
     btnRetry.addEventListener('click', handleRetry);
   }
 }
+
+//initialization
+function initializeApp() {
+  console.log('=== Initializing ATM DFA Simulator ===');
+  
+  try {
+    // Step 1: Create DFA instance
+    console.log('Creating DFA instance...');
+    atmDFA = new ATM_DFA();
+    console.log('✓ DFA created');
+    
+    // Step 2: Initialize UI
+    console.log('Initializing UI...');
+    initializeUI();
+    console.log('✓ UI initialized');
+    
+    // Step 3: Initialize diagram (if container exists)
+    const diagramContainer = document.getElementById('diagram-container');
+    if (diagramContainer) {
+      console.log('Initializing state diagram...');
+      initializeDiagram();
+      diagramInitialized = true;
+      console.log('✓ Diagram initialized');
+    } else {
+      console.warn('Diagram container not found - skipping diagram');
+    }
+    
+    // Step 4: Initialize string tester (if container exists)
+    const testerContainer = document.getElementById('tester-container');
+    if (testerContainer) {
+      console.log('Initializing string tester...');
+      initializeTester();
+      console.log('✓ Tester initialized');
+    } else {
+      console.warn('Tester container not found - skipping tester');
+    }
+    
+    // Step 5: Set up event listeners
+    console.log('Setting up event listeners...');
+    setupEventListeners();
+    console.log('✓ Event listeners set up');
+    
+    // Step 6: Display welcome message
+    updateScreen('S0', 'Welcome! Please insert your card to begin.');
+    
+    console.log('=== Initialization complete ===');
+    console.log('Current state:', atmDFA.currentState);
+    console.log('Correct PIN:', atmDFA.correctPin);
+    
+  } catch (error) {
+    console.error('Initialization failed:', error);
+    alert('Failed to initialize application. Please check the console for errors.');
+  }
+}
