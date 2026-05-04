@@ -35,10 +35,10 @@ const STATE_POSITIONS = {
 //TRANSITIONS - define all arrows between states
 /*
  Path types:
- straight': Direct line from A to B
- curve': Curved line (for self-loops or avoiding overlaps)
- arc': Semicircle (for return paths like S6 → S1)
- loop': Self-loop (arrow curves back to same state)
+ 'straight': Direct line from A to B
+ 'curve': Curved line (for self-loops or avoiding overlaps)
+ 'arc': Semicircle (for return paths like S6 → S1)
+ 'loop': Self-loop (arrow curves back to same state)
 */
 
 const TRANSITIONS = [
@@ -51,36 +51,36 @@ const TRANSITIONS = [
   { from: 'S4', to: 'S4', label: 'digit/⌫/clear', path: 'loop' }, // Amount entry
   
   // Account validation
-  { from: 'S1', to: 'S2', label: 'submit', path: 'straight' },
+  { from: 'S1', to: 'S2', label: 'submit (valid)', path: 'straight' },
+  { from: 'S1', to: 'S6', label: 'submit (invalid)', path: 'curve' },
   { from: 'S1', to: 'S0', label: 'cancel', path: 'curve' },
   
   // PIN validation
-  { from: 'S2', to: 'S3', label: 'correct', path: 'straight' },
-  { from: 'S2', to: 'S6', label: 'wrong', path: 'curve' },
+  { from: 'S2', to: 'S3', label: 'submit (correct)', path: 'straight' },
+  { from: 'S2', to: 'S6', label: 'submit (wrong)', path: 'curve' },
   { from: 'S2', to: 'S0', label: 'cancel', path: 'arc' },
   
   // Transaction selection
   { from: 'S3', to: 'S4', label: 'withdraw', path: 'straight' },
   { from: 'S3', to: 'S5', label: 'balance', path: 'straight' },
+  { from: 'S3', to: 'S0', label: 'cancel', path: 'arc' },
   
   // Amount entry and confirmation
   { from: 'S4', to: 'S7', label: 'confirm', path: 'curve' },
   { from: 'S4', to: 'S3', label: 'cancel', path: 'curve' },
+  { from: 'S4', to: 'S6', label: 'insufficient', path: 'curve' },
   
   // Balance display
   { from: 'S5', to: 'S3', label: 'back', path: 'curve' },
   { from: 'S5', to: 'S0', label: 'cancel', path: 'arc' },
   
   // Retry paths from rejected state
-  { from: 'S6', to: 'S2', label: 'retry', path: 'arc' },
-  { from: 'S6', to: 'S1', label: 'new acct', path: 'curve' },
+  { from: 'S6', to: 'S2', label: 'retry PIN', path: 'arc' },
+  { from: 'S6', to: 'S1', label: 'new account', path: 'curve' },
   { from: 'S6', to: 'S0', label: 'reset', path: 'arc' },
   
   // Done state
-  { from: 'S7', to: 'S0', label: 'reset', path: 'curve' },
-  
-  // Cancel from authenticated state
-  { from: 'S3', to: 'S0', label: 'cancel', path: 'arc' }
+  { from: 'S7', to: 'S0', label: 'reset', path: 'curve' }
 ];
 
 //create state nodes
@@ -223,6 +223,12 @@ function createTransition(from, to, label, pathType = 'straight') {
       controlY = midY + 60;
       labelX = controlX;
       labelY = controlY + 20;
+    } else if (from === 'S1' && to === 'S6') {
+      // S1 → S6 invalid account: curve down and slightly right
+      controlX = midX + 20;
+      controlY = midY + 30;
+      labelX = controlX + 25;
+      labelY = controlY + 10;
     } else if (from === 'S2' && to === 'S6') {
       // S2 → S6 wrong PIN: curve left
       controlX = midX - 60;
@@ -239,6 +245,12 @@ function createTransition(from, to, label, pathType = 'straight') {
       controlY = midY + 40;
       labelX = controlX;
       labelY = controlY + 20;
+    } else if (from === 'S4' && to === 'S6') {
+      // S4 → S6 insufficient funds: curve left and down
+      controlX = midX - 80;
+      controlY = midY + 20;
+      labelX = controlX - 30;
+      labelY = controlY + 10;
     } else if (from === 'S5' && to === 'S3') {
       // S5 → S3 back: curve down
       controlY = midY + 40;
@@ -248,7 +260,7 @@ function createTransition(from, to, label, pathType = 'straight') {
       // S6 → S1 new account: curve left
       controlX = midX - 40;
       controlY = midY - 20;
-      labelX = controlX - 25;
+      labelX = controlX - 35;
       labelY = controlY;
     } else if (from === 'S7' && to === 'S0') {
       // S7 → S0 reset: curve up high
