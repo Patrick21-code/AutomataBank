@@ -130,18 +130,29 @@ transition(input) {
                 this.accountBuffer = '';
                 message = 'Account cleared. Enter your 5-digit account number.';
             } else if (input === INPUTS.SUBMIT_ACCOUNT) {
-                //validate account
-                if (this.validateAccount()) {       //validateAccount function
+                //validate account length first
+                if (this.accountBuffer.length < 5) {
+                    toState = STATES.S6
+                    message = 'Account number too short. Transaction rejected.'
+                    this.accountBuffer = ''
+                    action = 'show_retry_options'
+                } else if (this.accountBuffer.length > 5) {
+                    toState = STATES.S6
+                    message = 'Account number too long. Transaction rejected.'
+                    this.accountBuffer = ''
+                    action = 'show_retry_options'
+                } else if (this.validateAccount()) {       //validateAccount function
                     toState = STATES.S2
                     this.currentAccount = ACCOUNTS[this.accountBuffer]
                     message = 'Account valid. Enter PIN.'
                     this.pinBuffer = ''     //prepare for PIN entry
                     action = 'start_pin_entry'
                 } else {
-                    //wrong account - just show error
-                    //stay at S1 to allow entry
-                    message = 'Invalid account number. Please try again.'
-                    this.accountBuffer = ''         //clear for retry
+                    //invalid account - transition to S6
+                    toState = STATES.S6
+                    message = 'Invalid account number. Transaction rejected.'
+                    this.accountBuffer = ''
+                    action = 'show_retry_options'
                 }
             } else if (input === INPUTS.CANCEL) {
                 toState = STATES.S0
@@ -170,7 +181,18 @@ transition(input) {
                 this.pinBuffer = '';
                 message = 'PIN cleared. Enter your 4-digit PIN.';
             } else if (input === INPUTS.SUBMIT_PIN) {
-                if (this.validatePin()) {
+                //validate PIN length first
+                if (this.pinBuffer.length < 4) {
+                    toState = STATES.S6
+                    message = 'PIN too short. Transaction rejected.'
+                    this.pinBuffer = ''
+                    action = 'show_retry_options'
+                } else if (this.pinBuffer.length > 4) {
+                    toState = STATES.S6
+                    message = 'PIN too long. Transaction rejected.'
+                    this.pinBuffer = ''
+                    action = 'show_retry_options'
+                } else if (this.validatePin()) {
                     toState = STATES.S3
                     message = 'PIN correct. Select transaction.'
                     action = 'show_transaction_menu'
@@ -233,16 +255,25 @@ transition(input) {
                 message = 'Amount cleared. Enter withdrawal amount.';
             } else if (input === INPUTS.CONFIRM) {
                 const amount = parseInt(this.amountBuffer)
-                const result = this.processWithdrawal(amount)
                 
-                if (result.success) {
-                toState = STATES.S7
-                message = `Withdrawal successful! New balance: $${result.newBalance}`
-                action = 'dispense_cash'
+                //check if amount exceeds account balance
+                if (amount > this.getBalance()) {
+                    toState = STATES.S6
+                    message = `Insufficient funds. Balance: $${this.getBalance()}. Transaction rejected.`
+                    this.amountBuffer = ''
+                    action = 'show_retry_options'
                 } else {
-                    //stay at s4 if withdrawal fails
-                    message = `Error: ${result.error}. Try again.`
-                    this.amountBuffer = ''          //reset
+                    const result = this.processWithdrawal(amount)
+                    
+                    if (result.success) {
+                        toState = STATES.S7
+                        message = `Withdrawal successful! New balance: $${result.newBalance}`
+                        action = 'dispense_cash'
+                    } else {
+                        //stay at s4 if withdrawal fails for other reasons
+                        message = `Error: ${result.error}. Try again.`
+                        this.amountBuffer = ''          //reset
+                    }
                 }
             } else if (input === INPUTS.CANCEL) {
                 toState = STATES.S3
@@ -250,7 +281,7 @@ transition(input) {
                 this.amountBuffer = ''
                 action = 'show_transaction_menu'
             } else {
-                message = 'Amount: ' + this.amountBuffer
+                message = 'Amount: $' + this.amountBuffer
             }
             break
         case STATES.S5:    //balance display
