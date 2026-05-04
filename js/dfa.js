@@ -85,6 +85,9 @@ class ATM_DFA {
 
         //transaction data
         this.transactionType = null;    //'withdraw' or 'balance'
+        
+        //rejection tracking
+        this.rejectionReason = null;    //tracks why we're in S6
 
         //history tracking (for UI display)
         this.transitionHistory = [];    //array of {from, input, to} objects
@@ -132,15 +135,13 @@ transition(input) {
             } else if (input === INPUTS.SUBMIT_ACCOUNT) {
                 //validate account length first
                 if (this.accountBuffer.length < 5) {
-                    toState = STATES.S6
-                    message = 'Account number too short. Transaction rejected.'
+                    toState = STATES.S1
+                    message = 'Account number too short. Please try again.'
                     this.accountBuffer = ''
-                    action = 'show_retry_options'
                 } else if (this.accountBuffer.length > 5) {
-                    toState = STATES.S6
-                    message = 'Account number too long. Transaction rejected.'
+                    toState = STATES.S1
+                    message = 'Account number too long. Please try again.'
                     this.accountBuffer = ''
-                    action = 'show_retry_options'
                 } else if (this.validateAccount()) {       //validateAccount function
                     toState = STATES.S2
                     this.currentAccount = ACCOUNTS[this.accountBuffer]
@@ -148,11 +149,10 @@ transition(input) {
                     this.pinBuffer = ''     //prepare for PIN entry
                     action = 'start_pin_entry'
                 } else {
-                    //invalid account - transition to S6
-                    toState = STATES.S6
-                    message = 'Invalid account number. Transaction rejected.'
+                    //invalid account - stay at S1 to retry
+                    toState = STATES.S1
+                    message = 'Invalid account number. Please try again.'
                     this.accountBuffer = ''
-                    action = 'show_retry_options'
                 }
             } else if (input === INPUTS.CANCEL) {
                 toState = STATES.S0
@@ -186,11 +186,13 @@ transition(input) {
                     toState = STATES.S6
                     message = 'PIN too short. Transaction rejected.'
                     this.pinBuffer = ''
+                    this.rejectionReason = 'pin_invalid'
                     action = 'show_retry_options'
                 } else if (this.pinBuffer.length > 4) {
                     toState = STATES.S6
                     message = 'PIN too long. Transaction rejected.'
                     this.pinBuffer = ''
+                    this.rejectionReason = 'pin_invalid'
                     action = 'show_retry_options'
                 } else if (this.validatePin()) {
                     toState = STATES.S3
@@ -200,6 +202,7 @@ transition(input) {
                 } else {
                     toState = STATES.S6;
                     this.pinFailedAttempts++
+                    this.rejectionReason = 'pin_wrong'
         
                     if (this.pinFailedAttempts >= this.maxPinAttempts) {
                         message = 'Card blocked. Too many wrong PIN attempts'
@@ -261,6 +264,7 @@ transition(input) {
                     toState = STATES.S6
                     message = `Insufficient funds. Balance: $${this.getBalance()}. Transaction rejected.`
                     this.amountBuffer = ''
+                    this.rejectionReason = 'insufficient_funds'
                     action = 'show_retry_options'
                 } else {
                     const result = this.processWithdrawal(amount)
@@ -297,25 +301,28 @@ transition(input) {
                 message = `Your balance: $${this.getBalance()}`
             }
             break
-        case STATES.S6:             //rejected - wrong PIN
+        case STATES.S6:             //rejected state
             if (input === INPUTS.ENTER_DIGIT) {
-                //retry - go back to account entry
+                //retry PIN - go back to PIN entry
                 toState = STATES.S2
                 message = 'Try your PIN again.'
                 this.pinBuffer = ''
+                this.rejectionReason = null
                 action = 'show_keypad' 
             } else if (input === INPUTS.CANCEL) {
-                //start over with difference account
+                //start over with different account
                 toState = STATES.S1
                 message = 'Enter account number.'
                 this.accountBuffer = ''
                 this.pinBuffer = ''
                 this.currentAccount = null
+                this.rejectionReason = null
                 action = 'show_keypad'
             } else if (input === INPUTS.RESET) {
                 toState = STATES.S0
                 message = 'Session ended'
                 this.pinFailedAttempts = 0
+                this.rejectionReason = null
                 action = 'reset_atm'
             }
             break
@@ -383,6 +390,7 @@ transition(input) {
         this.amountBuffer = ''
         this.currentAccount = null
         this.pinFailedAttempts = 0
+        this.rejectionReason = null
         this.transitionHistory = []
     }
 
