@@ -375,7 +375,7 @@ function createTransition(from, to, label, pathType = 'straight') {
   path.setAttribute('d', pathData);
   path.setAttribute('fill', 'none');
   path.setAttribute('stroke', '#3b82f6');  // Blue
-  path.setAttribute('stroke-width', '2');
+  path.setAttribute('stroke-width', '3');  // Increased from 2 to 3
   path.setAttribute('marker-end', 'url(#arrowhead)');  // Add arrowhead
   path.classList.add('transition-path');
   
@@ -383,17 +383,7 @@ function createTransition(from, to, label, pathType = 'straight') {
   
   group.appendChild(path);
   
-  // Create label
-  const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-  text.setAttribute('x', labelX);
-  text.setAttribute('y', labelY);
-  text.setAttribute('text-anchor', 'middle');
-  text.setAttribute('fill', '#1e40af');  // Darker blue
-  text.setAttribute('font-size', '12');
-  text.classList.add('transition-label');
-  text.textContent = label;
-  
-  group.appendChild(text);
+  // Labels removed for cleaner diagram
   
   return group;
 }
