@@ -224,6 +224,12 @@ function updateUIForState(state) {
   showResetButton(false);
   showLoadingSpinner(false);
   
+  // Hide done button (used only in S5)
+  const doneBtn = document.getElementById('btn-done');
+  if (doneBtn) {
+    doneBtn.style.display = 'none';
+  }
+  
   // Hide all submit buttons initially
   hideAllSubmitButtons();
 
@@ -253,6 +259,11 @@ function updateUIForState(state) {
         const confirmBtn = document.getElementById('btn-confirm');
         if (confirmBtn) {
           confirmBtn.innerHTML = '✓ Confirm';
+        }
+        // Show back button
+        const backBtn = document.getElementById('btn-back');
+        if (backBtn) {
+          backBtn.style.display = 'block';
         }
       }
       showKeypad(true);

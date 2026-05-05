@@ -292,6 +292,11 @@ transition(input) {
                 message = 'Withdrawal cancelled. Select transaction.'
                 this.amountBuffer = ''
                 action = 'show_transaction_menu'
+            } else if (input === INPUTS.BACK) {
+                toState = STATES.S3
+                message = 'Select transaction: Withdraw or Balance.'
+                this.amountBuffer = ''
+                action = 'show_transaction_menu'
             } else {
                 message = 'Amount: $' + this.amountBuffer
             }
