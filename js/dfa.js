@@ -288,10 +288,10 @@ transition(input) {
                     }
                 }
             } else if (input === INPUTS.CANCEL) {
-                toState = STATES.S3
-                message = 'Withdrawal cancelled. Select transaction.'
+                toState = STATES.S0
+                message = 'Transaction cancelled.'
                 this.amountBuffer = ''
-                action = 'show_transaction_menu'
+                action = 'reset_atm'
             } else if (input === INPUTS.BACK) {
                 toState = STATES.S3
                 message = 'Select transaction: Withdraw or Balance.'
@@ -337,14 +337,15 @@ transition(input) {
                     action = 'show_keypad'
                 }
             } else if (input === INPUTS.CANCEL) {
-                //start over with different account
-                toState = STATES.S1
-                message = 'Enter account number.'
+                //cancel and return to idle
+                toState = STATES.S0
+                message = 'Transaction cancelled.'
                 this.accountBuffer = ''
                 this.pinBuffer = ''
                 this.currentAccount = null
                 this.rejectionReason = null
-                action = 'show_keypad'
+                this.pinFailedAttempts = 0
+                action = 'reset_atm'
             } else if (input === INPUTS.RESET) {
                 toState = STATES.S0
                 message = 'Session ended'

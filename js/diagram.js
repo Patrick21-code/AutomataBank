@@ -67,17 +67,19 @@ const TRANSITIONS = [
   
   // Amount entry and confirmation
   { from: 'S4', to: 'S7', label: 'confirm', path: 'curve' },
-  { from: 'S4', to: 'S3', label: 'cancel', path: 'curve' },
+  { from: 'S4', to: 'S3', label: 'back', path: 'curve' },
+  { from: 'S4', to: 'S0', label: 'cancel', path: 'arc' },
   { from: 'S4', to: 'S6', label: 'insufficient', path: 'curve' },
   
   // Balance display
   { from: 'S5', to: 'S3', label: 'back', path: 'curve' },
+  { from: 'S5', to: 'S7', label: 'finish', path: 'curve' },
   { from: 'S5', to: 'S0', label: 'cancel', path: 'arc' },
   
   // Retry paths from rejected state
   { from: 'S6', to: 'S2', label: 'retry PIN', path: 'arc' },
   { from: 'S6', to: 'S1', label: 'new account', path: 'curve' },
-  { from: 'S6', to: 'S0', label: 'reset', path: 'arc' },
+  { from: 'S6', to: 'S0', label: 'cancel/reset', path: 'arc' },
   
   // Done state
   { from: 'S7', to: 'S0', label: 'reset', path: 'curve' }
@@ -473,6 +475,8 @@ function highlightState(stateValue) {
   // Convert state value to state ID for diagram
   const stateId = STATE_VALUE_TO_ID[stateValue] || stateValue;
   
+  console.log(`🎯 Highlighting state: ${stateValue} → ${stateId}`);
+  
   // Remove highlight from all states
   // emsures that only one state is highlighted at a time
   const allStates = document.querySelectorAll('.state-node');
@@ -484,9 +488,12 @@ function highlightState(stateValue) {
   const currentState = document.getElementById(`state-${stateId}`);
   if (currentState) {
     currentState.classList.add('active');
+    console.log(`✓ State ${stateId} highlighted successfully`);
     
     // Scroll into view if diagram is scrollable
     currentState.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  } else {
+    console.error(`❌ State element not found: state-${stateId}`);
   }
 }
 
