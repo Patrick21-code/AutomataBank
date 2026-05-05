@@ -75,6 +75,8 @@ function createStateNode(id, x, y, label, isAccept = false) {
   circle.setAttribute('r', 35);
   circle.classList.add('state-circle');
 
+  group.appendChild(circle);
+
   if (isAccept) {
     const innerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     innerCircle.setAttribute('cx', x);
@@ -83,8 +85,6 @@ function createStateNode(id, x, y, label, isAccept = false) {
     innerCircle.classList.add('state-circle-inner');
     group.appendChild(innerCircle);
   }
-
-  group.appendChild(circle);
 
   const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
   text.setAttribute('x', x);
