@@ -341,6 +341,12 @@ function setupEventListeners() {
     btnBack.addEventListener('click', handleBack);
   }
   
+  // Done button (for balance display)
+  const btnDone = document.getElementById('btn-done');
+  if (btnDone) {
+    btnDone.addEventListener('click', handleConfirm);
+  }
+  
   // Confirm/Cancel buttons
   const btnConfirm = document.getElementById('btn-confirm');
   if (btnConfirm) {

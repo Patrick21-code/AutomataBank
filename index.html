@@ -116,7 +116,7 @@
                     <button class="preset-btn" data-amount="200">$200</button>
                 </div>
                 
-                <!-- Confirm/Cancel Buttons (visible at S5) -->
+                <!-- Confirm/Cancel Buttons (visible at S4 for amount confirmation) -->
                 <div class="confirm-buttons">
                     <button id="btn-confirm" class="btn-success" style="display: none;">
                     ✓ Confirm
@@ -126,10 +126,15 @@
                     </button>
                 </div>
                 
-                <!-- Back Button -->
-                <button id="btn-back" class="btn-secondary" style="display: none;">
-                    ← Back to Menu
-                </button>
+                <!-- Balance Display Buttons (visible at S5) -->
+                <div class="balance-buttons">
+                    <button id="btn-back" class="btn-secondary" style="display: none;">
+                    ← Back
+                    </button>
+                    <button id="btn-done" class="btn-success" style="display: none;">
+                    ✓ Finish Transaction
+                    </button>
+                </div>
                 
                 <!-- Reset Button (visible at S7) -->
                 <button id="btn-reset" class="btn-secondary" style="display: none;">

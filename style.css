@@ -533,6 +533,16 @@ button:disabled {
   width: 100%;
 }
 
+/* ── Balance display buttons (vertical stack) ─────────────── */
+.balance-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.balance-buttons button {
+  width: 100%;
+}
+
 /* ── Keyboard shortcuts ─────────────────────────────────── */
 .keyboard-shortcuts {
   margin-top: 1.25rem;

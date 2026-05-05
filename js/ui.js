@@ -248,19 +248,50 @@ function updateUIForState(state) {
       break;
       
     case 'amount_entry':  // S4 - Amount entry
+      // Update confirm button label to "Confirm"
+      {
+        const confirmBtn = document.getElementById('btn-confirm');
+        if (confirmBtn) {
+          confirmBtn.innerHTML = '✓ Confirm';
+        }
+      }
       showKeypad(true);
       showSubmitButton('amount');
       break;
       
     case 'balance_display':  // S5 - Balance display
-      showBackButton(true);
-      showResetButton(true);
+      // Show Back and Done buttons vertically
+      {
+        const backBtn = document.getElementById('btn-back');
+        const doneBtn = document.getElementById('btn-done');
+        
+        if (backBtn) {
+          backBtn.style.display = 'block';
+        }
+        if (doneBtn) {
+          doneBtn.style.display = 'block';
+        }
+      }
       break;
       
     case 'rejected':  // S6 - Rejected
-      showKeypad(true);  // For retry
-      showSubmitButton('pin');
-      showResetButton(true);  // Or give up
+      // Check rejection reason to show appropriate UI
+      if (typeof atmDFA !== 'undefined' && atmDFA && atmDFA.rejectionReason) {
+        if (atmDFA.rejectionReason.includes('account')) {
+          // Account rejection - show account entry UI
+          showKeypad(true);
+          showSubmitButton('account');
+        } else {
+          // PIN rejection - show PIN entry UI
+          showKeypad(true);
+          showSubmitButton('pin');
+        }
+      } else {
+        // Default: show PIN entry UI
+        showKeypad(true);
+        showSubmitButton('pin');
+      }
+      showResetButton(true);  // Always allow reset
       break;
       
     case 'done':  // S7 - Done

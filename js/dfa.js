@@ -297,7 +297,11 @@ transition(input) {
             }
             break
         case STATES.S5:    //balance display
-            if (input === INPUTS.CONFIRM) {
+            if (input === INPUTS.BACK) {
+                toState = STATES.S3     // back to transaction menu
+                message = 'Select transaction: Withdraw or Balance.'
+                action = 'show_transaction_menu'
+            } else if (input === INPUTS.CONFIRM) {
                 toState = STATES.S7     // done button goes to S7
                 message = 'Transaction complete.'
                 action = 'complete_transaction'
