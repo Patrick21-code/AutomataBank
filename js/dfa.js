@@ -5,6 +5,8 @@
     - δ = transition function
     - q0 = start state
     - F = set of accept states
+    
+    Version: 2.1 - Fixed S6 highlighting for account validation
 */
 
 //define states (Q)
@@ -135,13 +137,17 @@ transition(input) {
             } else if (input === INPUTS.SUBMIT_ACCOUNT) {
                 //validate account length first
                 if (this.accountBuffer.length < 5) {
-                    toState = STATES.S1
-                    message = 'Account number too short. Please try again.'
+                    toState = STATES.S6
+                    message = 'Account number too short. Transaction rejected.'
                     this.accountBuffer = ''
+                    this.rejectionReason = 'account_too_short'
+                    action = 'show_retry_options'
                 } else if (this.accountBuffer.length > 5) {
-                    toState = STATES.S1
-                    message = 'Account number too long. Please try again.'
+                    toState = STATES.S6
+                    message = 'Account number too long. Transaction rejected.'
                     this.accountBuffer = ''
+                    this.rejectionReason = 'account_too_long'
+                    action = 'show_retry_options'
                 } else if (this.validateAccount()) {       //validateAccount function
                     toState = STATES.S2
                     this.currentAccount = ACCOUNTS[this.accountBuffer]
@@ -149,10 +155,12 @@ transition(input) {
                     this.pinBuffer = ''     //prepare for PIN entry
                     action = 'start_pin_entry'
                 } else {
-                    //invalid account - stay at S1 to retry
-                    toState = STATES.S1
-                    message = 'Invalid account number. Please try again.'
+                    //invalid account - go to S6
+                    toState = STATES.S6
+                    message = 'Invalid account number. Transaction rejected.'
                     this.accountBuffer = ''
+                    this.rejectionReason = 'account_invalid'
+                    action = 'show_retry_options'
                 }
             } else if (input === INPUTS.CANCEL) {
                 toState = STATES.S0
@@ -289,10 +297,10 @@ transition(input) {
             }
             break
         case STATES.S5:    //balance display
-            if (input === INPUTS.BACK) {
-                toState = STATES.S3     // back to transaction menu
-                message = 'Select transaction: Withdraw or Balance.'
-                action = 'show_transaction_menu'
+            if (input === INPUTS.CONFIRM) {
+                toState = STATES.S7     // done button goes to S7
+                message = 'Transaction complete.'
+                action = 'complete_transaction'
             } else if (input === INPUTS.CANCEL) {
                 toState = STATES.S0
                 message = 'Thank you for using our ATM'
@@ -303,12 +311,22 @@ transition(input) {
             break
         case STATES.S6:             //rejected state
             if (input === INPUTS.ENTER_DIGIT) {
-                //retry PIN - go back to PIN entry
-                toState = STATES.S2
-                message = 'Try your PIN again.'
-                this.pinBuffer = ''
-                this.rejectionReason = null
-                action = 'show_keypad' 
+                // Check rejection reason to determine where to go
+                if (this.rejectionReason && this.rejectionReason.includes('account')) {
+                    // Account-related rejection - go back to account entry
+                    toState = STATES.S1
+                    message = 'Enter account number.'
+                    this.accountBuffer = ''
+                    this.rejectionReason = null
+                    action = 'show_keypad'
+                } else {
+                    // PIN-related rejection - go back to PIN entry
+                    toState = STATES.S2
+                    message = 'Try your PIN again.'
+                    this.pinBuffer = ''
+                    this.rejectionReason = null
+                    action = 'show_keypad'
+                }
             } else if (input === INPUTS.CANCEL) {
                 //start over with different account
                 toState = STATES.S1
@@ -341,6 +359,11 @@ transition(input) {
 
     this.currentState = toState
     this.transitionHistory.push({from: fromState, input, to: toState})
+
+    console.log(`🔄 DFA Transition: ${fromState} --[${input}]--> ${toState}`);
+    if (this.rejectionReason) {
+        console.log(`   Rejection reason: ${this.rejectionReason}`);
+    }
 
     return {fromState, toState, message, action, currentBalance: this.getBalance()}
 }
