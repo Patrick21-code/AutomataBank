@@ -289,20 +289,22 @@ function updateUIForState(state) {
       // Check rejection reason to show appropriate UI
       if (typeof atmDFA !== 'undefined' && atmDFA && atmDFA.rejectionReason) {
         if (atmDFA.rejectionReason.includes('account')) {
-          // Account rejection - show account entry UI
+          // Account rejection - show account entry UI (no reset button)
           showKeypad(true);
           showSubmitButton('account');
-        } else {
-          // PIN rejection - show PIN entry UI
+        } else if (atmDFA.rejectionReason.includes('PIN')) {
+          // PIN rejection - show PIN entry UI (no reset button)
           showKeypad(true);
           showSubmitButton('pin');
+        } else {
+          // Other rejections - show reset button
+          showResetButton(true);
         }
       } else {
         // Default: show PIN entry UI
         showKeypad(true);
         showSubmitButton('pin');
       }
-      showResetButton(true);  // Always allow reset
       break;
       
     case 'done':  // S7 - Done
