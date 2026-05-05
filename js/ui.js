@@ -230,6 +230,12 @@ function updateUIForState(state) {
     doneBtn.style.display = 'none';
   }
   
+  // Hide retry button
+  const retryBtn = document.getElementById('btn-retry');
+  if (retryBtn) {
+    retryBtn.style.display = 'none';
+  }
+  
   // Hide all submit buttons initially
   hideAllSubmitButtons();
 
@@ -292,6 +298,13 @@ function updateUIForState(state) {
           // Account rejection - show account entry UI (no reset button)
           showKeypad(true);
           showSubmitButton('account');
+        } else if (atmDFA.rejectionReason === 'insufficient_funds') {
+          // Insufficient funds - show "Try Again" button to go back to S4
+          const tryAgainBtn = document.getElementById('btn-retry');
+          if (tryAgainBtn) {
+            tryAgainBtn.style.display = 'block';
+            tryAgainBtn.innerHTML = '↻ Try Again';
+          }
         } else if (atmDFA.rejectionReason.includes('pin')) {
           // PIN rejection - show PIN entry UI WITH reset button
           showKeypad(true);

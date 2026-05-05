@@ -328,6 +328,13 @@ transition(input) {
                     this.accountBuffer = ''
                     this.rejectionReason = null
                     action = 'show_keypad'
+                } else if (this.rejectionReason === 'insufficient_funds') {
+                    // Insufficient funds - go back to amount entry
+                    toState = STATES.S4
+                    message = 'Enter withdrawal amount.'
+                    this.amountBuffer = ''
+                    this.rejectionReason = null
+                    action = 'show_amount_keypad'
                 } else {
                     // PIN-related rejection - go back to PIN entry
                     toState = STATES.S2

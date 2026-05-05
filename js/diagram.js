@@ -54,6 +54,7 @@ const TRANSITIONS = [
   // FIXED: was 'arc', now 'curve'
   { from: 'S6', to: 'S2', label: 'retry PIN', path: 'curve' },
   // FIXED: was 'arc', now 'curve'
+  { from: 'S6', to: 'S4', label: 'retry amount', path: 'curve' },
   { from: 'S6', to: 'S0', label: 'cancel/reset', path: 'curve' },
 
   // Done state
@@ -234,6 +235,12 @@ function createTransition(from, to, label, pathType = 'straight') {
       controlY = midY - 30;
       labelX = controlX + 30;
       labelY = controlY - 10;
+    } else if (from === 'S6' && to === 'S4') {
+      // Curve up and right to S4
+      controlX = midX + 100;
+      controlY = midY - 20;
+      labelX = controlX + 40;
+      labelY = controlY;
     }
 
     // Approximate end point on circle edge using tangent at t=0.95
