@@ -292,18 +292,20 @@ function updateUIForState(state) {
           // Account rejection - show account entry UI (no reset button)
           showKeypad(true);
           showSubmitButton('account');
-        } else if (atmDFA.rejectionReason.includes('PIN')) {
-          // PIN rejection - show PIN entry UI (no reset button)
+        } else if (atmDFA.rejectionReason.includes('pin')) {
+          // PIN rejection - show PIN entry UI WITH reset button
           showKeypad(true);
           showSubmitButton('pin');
+          showResetButton(true);
         } else {
           // Other rejections - show reset button
           showResetButton(true);
         }
       } else {
-        // Default: show PIN entry UI
+        // Default: show PIN entry UI with reset
         showKeypad(true);
         showSubmitButton('pin');
+        showResetButton(true);
       }
       break;
       
