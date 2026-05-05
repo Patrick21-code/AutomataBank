@@ -63,7 +63,6 @@ const TRANSITIONS = [
   // Transaction selection
   { from: 'S3', to: 'S4', label: 'withdraw', path: 'straight' },
   { from: 'S3', to: 'S5', label: 'balance', path: 'straight' },
-  { from: 'S3', to: 'S0', label: 'cancel', path: 'arc' },
   
   // Amount entry and confirmation
   { from: 'S4', to: 'S7', label: 'confirm', path: 'curve' },
@@ -74,11 +73,10 @@ const TRANSITIONS = [
   // Balance display
   { from: 'S5', to: 'S3', label: 'back', path: 'curve' },
   { from: 'S5', to: 'S7', label: 'finish', path: 'curve' },
-  { from: 'S5', to: 'S0', label: 'cancel', path: 'arc' },
   
   // Retry paths from rejected state
+  { from: 'S6', to: 'S1', label: 'retry account', path: 'curve' },
   { from: 'S6', to: 'S2', label: 'retry PIN', path: 'arc' },
-  { from: 'S6', to: 'S1', label: 'new account', path: 'curve' },
   { from: 'S6', to: 'S0', label: 'cancel/reset', path: 'arc' },
   
   // Done state
@@ -258,6 +256,12 @@ function createTransition(from, to, label, pathType = 'straight') {
       controlY = midY + 40;
       labelX = controlX;
       labelY = controlY + 20;
+    } else if (from === 'S5' && to === 'S7') {
+      // S5 → S7 finish: curve up and right
+      controlX = midX + 80;
+      controlY = midY - 60;
+      labelX = controlX + 20;
+      labelY = controlY;
     } else if (from === 'S6' && to === 'S1') {
       // S6 → S1 new account: curve left
       controlX = midX - 40;
@@ -306,11 +310,6 @@ function createTransition(from, to, label, pathType = 'straight') {
       sweepFlag = 0;  // Counter-clockwise
       labelOffset = -35;
       labelXOffset = 0;
-    } else if (from === 'S5' && to === 'S0') {
-      // S5 → S0 cancel: arc below
-      sweepFlag = 1;  // Clockwise
-      labelOffset = 55;
-      labelXOffset = 0;
     } else if (from === 'S6' && to === 'S2') {
       // S6 → S2 retry: arc right
       sweepFlag = 0;  // Counter-clockwise
@@ -321,14 +320,24 @@ function createTransition(from, to, label, pathType = 'straight') {
       sweepFlag = 1;  // Clockwise
       labelOffset = 70;
       labelXOffset = -20;
-    } else if (from === 'S3' && to === 'S0') {
-      // S3 → S0 cancel: arc above
-      sweepFlag = 0;  // Counter-clockwise
-      labelOffset = -45;
-      labelXOffset = 0;
+    } else if (from === 'S4' && to === 'S0') {
+      // S4 → S0 cancel: arc way below to avoid other paths
+      sweepFlag = 1;  // Clockwise
+      labelOffset = 100;
+      labelXOffset = -100;
     }
     
-    pathData = `M ${fromPos.x} ${fromPos.y} A ${radius} ${radius} 0 0 ${sweepFlag} ${toPos.x} ${toPos.y}`;
+    // Calculate start and end points on circle edges for arcs
+    // For arcs, we need to calculate the tangent direction at start and end
+    const angle = Math.atan2(dy, dx);
+    const perpAngle = angle + (sweepFlag === 0 ? Math.PI / 2 : -Math.PI / 2);
+    
+    const startX = fromPos.x + STATE_RADIUS * Math.cos(perpAngle);
+    const startY = fromPos.y + STATE_RADIUS * Math.sin(perpAngle);
+    const endX = toPos.x - STATE_RADIUS * Math.cos(perpAngle);
+    const endY = toPos.y - STATE_RADIUS * Math.sin(perpAngle);
+    
+    pathData = `M ${startX} ${startY} A ${radius} ${radius} 0 0 ${sweepFlag} ${endX} ${endY}`;
     labelX = (fromPos.x + toPos.x) / 2 + labelXOffset;
     labelY = (fromPos.y + toPos.y) / 2 + labelOffset;
   }
@@ -408,11 +417,12 @@ function createStateDiagram() {
   const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
   marker.id = 'arrowhead';
   marker.setAttribute('viewBox', '0 0 10 10');
-  marker.setAttribute('refX', '9');
+  marker.setAttribute('refX', '10');
   marker.setAttribute('refY', '5');
-  marker.setAttribute('markerWidth', '6');
-  marker.setAttribute('markerHeight', '6');
-  marker.setAttribute('orient', 'auto-start-reverse');
+  marker.setAttribute('markerWidth', '8');
+  marker.setAttribute('markerHeight', '8');
+  marker.setAttribute('orient', 'auto');
+  marker.setAttribute('markerUnits', 'strokeWidth');
 
   // Arrowhead shape (triangle)
   const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
