@@ -489,7 +489,6 @@ function getSystemInfo() {
     stateDescription: atmDFA.getStateDescription(),
     accountBuffer: atmDFA.accountBuffer ? '(entered)' : '(empty)',
     pinBuffer: '•'.repeat(atmDFA.pinBuffer.length),  // Masked
-    pinFailedAttempts: atmDFA.pinFailedAttempts,
     balance: atmDFA.getBalance(),
     transactionHistory: atmDFA.getTransitionHistory(),
     isInAcceptState: atmDFA.isInAcceptState()

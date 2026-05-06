@@ -81,10 +81,7 @@ class ATM_DFA {
         //account management
         this.currentAccount = null      //reference to logged-in account
                                         //null since no one is logged in yet
-        //security
-        this.pinFailedAttempts = 0
-        this.maxPinAttempts = 3
-
+        
         //transaction data
         this.transactionType = null;    //'withdraw' or 'balance'
         
@@ -206,19 +203,11 @@ transition(input) {
                     toState = STATES.S3
                     message = 'PIN correct. Select transaction.'
                     action = 'show_transaction_menu'
-                    this.pinFailedAttempts = 0;     //reset fail counter on success
                 } else {
                     toState = STATES.S6;
-                    this.pinFailedAttempts++
                     this.rejectionReason = 'pin_wrong'
-        
-                    if (this.pinFailedAttempts >= this.maxPinAttempts) {
-                        message = 'Card blocked. Too many wrong PIN attempts'
-                        action = 'block_card'
-                    } else {
-                        message = `WRONG PIN. ${this.maxPinAttempts - this.pinFailedAttempts} attempts remaining`
-                        action = 'show_retry_options'
-                    }
+                    message = 'Wrong PIN. Transaction rejected.'
+                    action = 'show_retry_options'
                 }
                 this.pinBuffer = ''     //clear pin buffer after submission
             } else if (input === INPUTS.CANCEL) {
@@ -351,12 +340,10 @@ transition(input) {
                 this.pinBuffer = ''
                 this.currentAccount = null
                 this.rejectionReason = null
-                this.pinFailedAttempts = 0
                 action = 'reset_atm'
             } else if (input === INPUTS.RESET) {
                 toState = STATES.S0
                 message = 'Session ended'
-                this.pinFailedAttempts = 0
                 this.rejectionReason = null
                 action = 'reset_atm'
             }
@@ -366,7 +353,6 @@ transition(input) {
                 toState = STATES.S0
                 message = 'Thank you for using our ATM.'
                 this.currentAccount = null
-                this.pinFailedAttempts = 0
                 action = 'reset_atm'
             } else {
                 message = 'Transaction complete. Press RESET to finish.'
@@ -429,7 +415,6 @@ transition(input) {
         this.pinBuffer = ''
         this.amountBuffer = ''
         this.currentAccount = null
-        this.pinFailedAttempts = 0
         this.rejectionReason = null
         this.transitionHistory = []
     }
