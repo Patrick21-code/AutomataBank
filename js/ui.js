@@ -429,103 +429,10 @@ function initializeUI() {
   updateUIForState('idle');
   updateScreen('idle', 'Welcome! Press START to begin transaction.');
   
-  // Set up keyboard shortcuts
-  setupKeyboardShortcuts();
-  
   // Add accessibility attributes
   setupAccessibility();
   
   console.log('UI initialized successfully');
-}
-
-//setup keyboard shortcuts
-/*
- Shortcuts:
- 0-9: Enter digit
- Enter: Submit PIN / Confirm
- Escape: Cancel
- S: Start transaction
- R: Reset
-*/
-
-function setupKeyboardShortcuts() {
-  document.addEventListener('keydown', (event) => {
-    // Don't interfere if user is typing in an input field
-    if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
-      return;
-    }
-    
-    // Number keys (0-9)
-    if (event.key >= '0' && event.key <= '9') {
-      const digitBtn = document.getElementById(`btn-digit-${event.key}`);
-      if (digitBtn && digitBtn.style.display !== 'none') {
-        digitBtn.click();
-      }
-    }
-    
-    // Backspace key
-    if (event.key === 'Backspace') {
-      event.preventDefault(); // Prevent browser back navigation
-      const backspaceBtn = document.getElementById('btn-backspace');
-      if (backspaceBtn && backspaceBtn.offsetParent !== null) {
-        backspaceBtn.click();
-      }
-    }
-    
-    // Delete key - Clear
-    if (event.key === 'Delete') {
-      const clearBtn = document.getElementById('btn-clear');
-      if (clearBtn && clearBtn.offsetParent !== null) {
-        clearBtn.click();
-      }
-    }
-    
-    // Enter key
-    if (event.key === 'Enter') {
-      const submitAccount = document.getElementById('btn-submit-account');
-      const submitPin = document.getElementById('btn-submit-pin');
-      const submitAmount = document.getElementById('btn-submit-amount');
-      const confirmBtn = document.getElementById('btn-confirm');
-      
-      if (submitAccount && submitAccount.style.display !== 'none') {
-        submitAccount.click();
-      } else if (submitPin && submitPin.style.display !== 'none') {
-        submitPin.click();
-      } else if (submitAmount && submitAmount.style.display !== 'none') {
-        submitAmount.click();
-      } else if (confirmBtn && confirmBtn.style.display !== 'none') {
-        confirmBtn.click();
-      }
-    }
-    
-    // Escape key
-    if (event.key === 'Escape') {
-      const cancelBtn = document.getElementById('btn-cancel');
-      const cancelKeypadBtn = document.getElementById('btn-cancel-keypad');
-      
-      if (cancelBtn && cancelBtn.style.display !== 'none') {
-        cancelBtn.click();
-      } else if (cancelKeypadBtn && cancelKeypadBtn.offsetParent !== null) {
-        cancelKeypadBtn.click();
-      }
-    }
-    
-    // S key - Start transaction
-    if (event.key.toLowerCase() === 's') {
-      const startBtn = document.getElementById('btn-start');
-      if (startBtn && startBtn.style.display !== 'none') {
-        startBtn.click();
-      }
-    }
-    
-    // R key - Reset
-    if (event.key.toLowerCase() === 'r') {
-      const resetBtn = document.getElementById('btn-reset');
-      if (resetBtn && resetBtn.style.display !== 'none') {
-        resetBtn.click();
-      }
-    }
-  });
 }
 
 //setupAccessibility - for screen readers

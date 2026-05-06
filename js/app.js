@@ -396,13 +396,6 @@ function setupEventListeners() {
   if (btnClosePanel) {
     btnClosePanel.addEventListener('click', closeDiagramPanel);
   }
-  
-  // Close on Escape key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && diagramPanel && diagramPanel.classList.contains('open')) {
-      closeDiagramPanel();
-    }
-  });
 }
 
 //initialization
