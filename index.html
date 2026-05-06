@@ -211,64 +211,7 @@
         </div>
     </aside>
 
-    <!--string tester-->
-    <section class="tester-section">
-        <div class="container">
-        <h2>String Input Tester</h2>
-        <p class="section-description">
-            Test if a string is accepted by the DFA. Enter space-separated symbols from the alphabet.
-        </p>
-        
-        <!-- Test Input Area -->
-        <div class="tester-input-area">
-            <label for="test-input">
-            Input String (space-separated symbols):
-            </label>
-            <textarea 
-            id="test-input" 
-            rows="3" 
-            placeholder="Example: start enter_digit enter_digit enter_digit enter_digit enter_digit submit_account enter_digit enter_digit enter_digit enter_digit submit_pin select_withdraw enter_amount enter_amount enter_amount confirm reset"
-            ></textarea>
-            
-            <div class="tester-buttons">
-            <button id="btn-run-test" class="btn-primary">
-                ▶ Run Test
-            </button>
-            <button id="btn-clear-test" class="btn-secondary">
-                Clear
-            </button>
-            </div>
-        </div>
-        
-        <!-- Predefined Test Cases -->
-        <div class="test-cases">
-            <h3>Predefined Test Cases</h3>
-            <p class="help-text">Click a test case to load it:</p>
-            <div id="test-cases-container" class="test-cases-grid">
-            <!-- Buttons will be inserted by JavaScript -->
-            </div>
-        </div>
-        
-        <!-- Test Description (shows when test case is loaded) -->
-        <div id="test-description" class="test-description">
-            <!-- Description will be inserted by JavaScript -->
-        </div>
-        
-        <!-- Test Result -->
-        <div id="test-result" class="test-result">
-            <!-- Result will be inserted by JavaScript -->
-        </div>
-        
-        <!-- Execution Trace -->
-        <div class="trace-section">
-            <h3>Execution Trace</h3>
-            <div id="trace-output" class="trace-output">
-            <!-- Trace table will be inserted by JavaScript -->
-            </div>
-        </div>
-        
-        </div>
-    </section>
+
 
     <!-- 
         Footer - Project information and credits
@@ -301,7 +244,6 @@
     <!-- UI components (depend on dfa.js) -->
     <script src="js/ui.js"></script>
     <script src="js/diagram.js"></script>
-    <script src="js/tester.js"></script>
     
     <!-- Main controller (depends on all above) -->
     <script src="js/app.js"></script>
