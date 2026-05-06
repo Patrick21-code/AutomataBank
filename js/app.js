@@ -424,22 +424,12 @@ function initializeApp() {
       console.warn('Diagram container not found - skipping diagram');
     }
     
-    // Step 4: Initialize string tester (if container exists)
-    const testerContainer = document.getElementById('tester-container');
-    if (testerContainer) {
-      console.log('Initializing string tester...');
-      initializeTester();
-      console.log('✓ Tester initialized');
-    } else {
-      console.warn('Tester container not found - skipping tester');
-    }
-    
-    // Step 5: Set up event listeners
+    // Step 4: Set up event listeners
     console.log('Setting up event listeners...');
     setupEventListeners();
     console.log('✓ Event listeners set up');
     
-    // Step 6: Display welcome message
+    // Step 5: Display welcome message
     updateScreen('idle', 'Welcome! Please press START to begin.');
     
     console.log('=== Initialization complete ===');
