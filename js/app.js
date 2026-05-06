@@ -157,14 +157,8 @@ function handleSubmitAccount() {
 function handleSubmitPin() {
   console.log('Submit PIN clicked');
   
-  // Check if PIN has 4 digits
-  if (atmDFA.pinBuffer.length !== 4) {
-    flashScreen('error');
-    updateScreen(atmDFA.currentState, 'PIN must be 4 digits');
-    return;
-  }
-  
-  // Process the transition (DFA will validate PIN internally)
+  // Always process the transition - let the DFA handle validation
+  // This ensures S6 gets highlighted for invalid PIN lengths
   processTransition(INPUTS.SUBMIT_PIN);
 }
 
