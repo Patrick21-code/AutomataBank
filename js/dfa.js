@@ -17,7 +17,7 @@ const STATES = {
     S3: 'authenticated',
     S4: 'amount_entry',
     S5: 'balance_display',
-    S6: 'rejected',         //wrong credentials, can retry
+    S6: 'rejected',         
     S7: 'done'              //accepting state
 }
 
