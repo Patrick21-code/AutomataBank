@@ -299,6 +299,32 @@ function createTransition(from, to, label, pathType = 'straight') {
   return group;
 }
 
+// CREATE INITIAL STATE ARROW
+function createInitialStateArrow() {
+  const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  group.classList.add('initial-arrow');
+  
+  const s0Pos = STATE_POSITIONS['S0'];
+  const STATE_RADIUS = 35;
+  
+  // Arrow starts from the left, pointing to S0
+  const startX = s0Pos.x - STATE_RADIUS - 40;
+  const startY = s0Pos.y;
+  const endX = s0Pos.x - STATE_RADIUS;
+  const endY = s0Pos.y;
+  
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  path.setAttribute('d', `M ${startX} ${startY} L ${endX} ${endY}`);
+  path.setAttribute('fill', 'none');
+  path.setAttribute('stroke', '#3b82f6');
+  path.setAttribute('stroke-width', '3');
+  path.setAttribute('marker-end', 'url(#arrowhead)');
+  
+  group.appendChild(path);
+  
+  return group;
+}
+
 // CREATE COMPLETE DIAGRAM
 function createStateDiagram() {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -307,9 +333,10 @@ function createStateDiagram() {
   svg.setAttribute('viewBox', '0 0 1000 600');
   svg.id = 'state-diagram';
 
-  // Arrowhead marker
+  // Arrowhead markers
   const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
 
+  // Regular arrowhead for transitions
   const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
   marker.id = 'arrowhead';
   marker.setAttribute('viewBox', '0 0 10 10');
@@ -325,9 +352,10 @@ function createStateDiagram() {
 
   marker.appendChild(polygon);
   defs.appendChild(marker);
+  
   svg.appendChild(defs);
 
-  console.log('✓ Arrowhead marker created');
+  console.log('✓ Arrowhead markers created');
 
   const transitionsGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
   transitionsGroup.id = 'transitions';
@@ -335,7 +363,11 @@ function createStateDiagram() {
   const statesGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
   statesGroup.id = 'states';
 
-  // Draw transitions first (behind states)
+  // Draw initial state arrow first
+  const initialArrow = createInitialStateArrow();
+  transitionsGroup.appendChild(initialArrow);
+
+  // Draw transitions (behind states)
   TRANSITIONS.forEach(trans => {
     const transitionElement = createTransition(trans.from, trans.to, trans.label, trans.path);
     if (transitionElement) {
